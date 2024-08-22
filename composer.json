@@ -1,0 +1,18 @@
+{
+    "name": "socamaru/smeargle",
+    "description": "Utility for SweetTicketDesign and PukaHTTP",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Socamaru\\Smeargle\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "OscarDevCPP",
+            "email": "oscarchh0799@gmail.com"
+        }
+    ],
+    "require": {}
+}
