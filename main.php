@@ -37,7 +37,17 @@ $textBlock = SmgTextBlock::build($config)
 $openDrawer = SmgDrawer::builder()->pin(SmgDrawerPin::_5)->t1(120)->t2(240);
 $cut = SmgCutProperty::builder()->feed(4)->mode(SmgCutMode::PART);
 $properties = SmgProperties::builder()->blockWidth(48)->normalize()->cut($cut);
-$printObjectConfig = SmgPrintObjectConfig::instance()->properties($properties)->openDrawer($openDrawer);
+
+$printer = [
+    "name" => "EPSON",
+    "type" => "SYSTEM"
+];
+
+$printObjectConfig = SmgPrintObjectConfig::instance()
+    ->info("times", 1)
+    ->info("printer", $printer)
+    ->properties($properties)
+    ->openDrawer($openDrawer);
 $printObject = SmgPrintObject::build($printObjectConfig)->text("hola")->block($textBlock);
 
 echo json_encode(json_decode($printObject->toJson(), true), JSON_PRETTY_PRINT);
