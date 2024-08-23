@@ -5,7 +5,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Socamaru\\Smeargle\\": "src/"
+            "PuyuPe\\Smeargle\\": "src/"
         }
     },
     "authors": [

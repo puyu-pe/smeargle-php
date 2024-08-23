@@ -1,0 +1,18 @@
+services:
+  app:
+    container_name: ${APP_NAME}
+    build:
+      context: php
+      args:
+        UID: $U_ID
+    volumes:
+      - ${APP_PATH}:/var/library:cached
+    environment:
+      PHP_IDE_CONFIG: serverName=${APP_NAME}
+    networks:
+      - default
+
+networks:
+  default:
+    name: ${APP_NAME}-network
+    external: true
