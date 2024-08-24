@@ -56,7 +56,6 @@ $qrBlock = SmgQrBlock::build("fdfasfasf")
 
 $openDrawer = SmgDrawer::builder()->pin(SmgDrawerPin::_5)->t1(120)->t2(240);
 $cut = SmgCutProperty::builder()->feed(4)->mode(SmgCutMode::PART);
-$properties = SmgProperties::builder()->blockWidth(48)->normalize()->cut($cut);
 
 $printer = [
     "name" => "EPSON",
@@ -66,7 +65,8 @@ $printer = [
 $printObjectConfig = SmgPrintObjectConfig::instance()
     ->info("times", 1)
     ->info("printer", $printer)
-    ->properties($properties)
+    ->blockWidth(48)
+    ->normalize()
     ->openDrawer($openDrawer);
 
 $printObject = SmgPrintObject::build($printObjectConfig)

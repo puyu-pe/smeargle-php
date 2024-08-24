@@ -4,17 +4,20 @@ namespace PuyuPe\Smeargle;
 
 use PuyuPe\Smeargle\opendrawer\SmgDrawer;
 use PuyuPe\Smeargle\opendrawer\SmgDrawerPin;
+use PuyuPe\Smeargle\properties\SmgCutProperty;
 use PuyuPe\Smeargle\properties\SmgProperties;
 
 class SmgPrintObjectConfig
 {
     private array $object;
     private array $metadata;
+    private SmgProperties $properties;
 
     private function __construct()
     {
         $this->metadata = [];
         $this->object = [];
+        $this->properties = SmgProperties::builder();
     }
 
     public static function instance(): SmgPrintObjectConfig
@@ -28,12 +31,33 @@ class SmgPrintObjectConfig
         return $this;
     }
 
+    public function blockWidth(int $blockWidth): self
+    {
+        $this->properties->blockWidth($blockWidth);
+        return $this;
+    }
+
+    public function normalize(bool $normalize = true): self
+    {
+        $this->properties->normalize($normalize);
+        return $this;
+    }
+
+    public function charCode(string $charCode): self
+    {
+        $this->properties->charCode($charCode);
+        return $this;
+    }
+
+    public function cut(SmgCutProperty $cutProperty): self
+    {
+        $this->properties->cut($cutProperty);
+        return $this;
+    }
+
     public function properties(SmgProperties $properties): self
     {
-        $propertiesObj = $properties->toJson();
-        if ($propertiesObj != null) {
-            $this->object["properties"] = json_decode($propertiesObj, true);
-        }
+        $this->properties->merge($properties);
         return $this;
     }
 
@@ -46,6 +70,9 @@ class SmgPrintObjectConfig
 
     public function toJson(): ?string
     {
+        if (!$this->properties->isEmpty()) {
+            $this->object["properties"] = json_decode($this->properties->toJson(), true);
+        }
         $this->object = array_merge($this->metadata, $this->object);
         if (count($this->object) == 0) return null;
         return json_encode($this->object);

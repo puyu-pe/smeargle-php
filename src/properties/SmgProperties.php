@@ -16,6 +16,12 @@ class SmgProperties
         return new SmgProperties();
     }
 
+    public function merge(SmgProperties $otherProperties): self
+    {
+        $this->object = array_merge($this->object, $otherProperties->object);
+        return $this;
+    }
+
     public function blockWidth(int $blockWidth): self
     {
         $this->object["blockWidth"] = max(0, $blockWidth);
@@ -37,10 +43,15 @@ class SmgProperties
     public function cut(SmgCutProperty $cutProperty): self
     {
         $cut = $cutProperty->toJson();
-        if($cut != null){
+        if ($cut != null) {
             $this->object["cut"] = json_decode($cutProperty->toJson(), true);
         }
         return $this;
+    }
+
+    public function isEmpty(): bool
+    {
+        return count($this->object) == 0;
     }
 
     public function toJson(): ?string
