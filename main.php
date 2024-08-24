@@ -14,6 +14,10 @@ use \PuyuPe\Smeargle\properties\SmgCutProperty;
 use \PuyuPe\Smeargle\properties\SmgCutMode;
 use \PuyuPe\Smeargle\opendrawer\SmgDrawer;
 use \PuyuPe\Smeargle\opendrawer\SmgDrawerPin;
+use \PuyuPe\Smeargle\blocks\img\SmgImageBlock;
+use \PuyuPe\Smeargle\blocks\style\SmgScale;
+use \PuyuPe\Smeargle\blocks\qr\SmgQrBlock;
+use \PuyuPe\Smeargle\blocks\qr\SmgQrConfig;
 
 $mapStyles = new SmgMapStyles();
 $mapStyles->set("own-style", SmgStyle::builder()->width(255));
@@ -34,6 +38,22 @@ $textBlock = SmgTextBlock::build($config)
     ->line()
     ->line("*");
 
+$imageBlock = SmgImageBlock::build('c:\\lele')
+    ->center()
+    ->scale(SmgScale::SMOOTH)
+    ->style(SmgStyle::builder()->height(255)->width(4040))
+    ->size(4)
+    ->width(10)
+    ->height(20);
+
+
+$qrConfig = SmgQrConfig::instance()->low()->native();
+$qrBlock = SmgQrBlock::build("fdfasfasf")
+    ->width(34)
+    ->center()
+    ->scale(SmgScale::REPLICATE)
+    ->height(100);
+
 $openDrawer = SmgDrawer::builder()->pin(SmgDrawerPin::_5)->t1(120)->t2(240);
 $cut = SmgCutProperty::builder()->feed(4)->mode(SmgCutMode::PART);
 $properties = SmgProperties::builder()->blockWidth(48)->normalize()->cut($cut);
@@ -48,6 +68,11 @@ $printObjectConfig = SmgPrintObjectConfig::instance()
     ->info("printer", $printer)
     ->properties($properties)
     ->openDrawer($openDrawer);
-$printObject = SmgPrintObject::build($printObjectConfig)->text("hola")->block($textBlock);
+
+$printObject = SmgPrintObject::build($printObjectConfig)
+    ->text("hola")
+    ->block($textBlock)
+    ->block($imageBlock)
+    ->block($qrBlock);
 
 echo json_encode(json_decode($printObject->toJson(), true), JSON_PRETTY_PRINT);

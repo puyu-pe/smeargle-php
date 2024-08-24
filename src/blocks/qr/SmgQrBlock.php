@@ -1,6 +1,6 @@
 <?php
 
-namespace PuyuPe\Smeargle\blocks\img;
+namespace PuyuPe\Smeargle\blocks\qr;
 
 use PuyuPe\Smeargle\blocks\SmgBlock;
 use PuyuPe\Smeargle\blocks\style\SmgJustify;
@@ -8,22 +8,28 @@ use PuyuPe\Smeargle\blocks\style\SmgMapStyles;
 use PuyuPe\Smeargle\blocks\style\SmgScale;
 use PuyuPe\Smeargle\blocks\style\SmgStyle;
 
-class SmgImageBlock implements SmgBlock
+class SmgQrBlock implements SmgBlock
 {
     private array $object;
     private SmgStyle $style;
 
-    private function __construct()
+    private function __construct(array $object)
     {
-        $this->object = [];
+        $this->object = $object;
         $this->style = SmgStyle::builder();
     }
 
-    public static function build(string $imgPath): SmgImageBlock
+    public static function build(string $data, ?SmgQrConfig $config = null): SmgQrBlock
     {
-        $imageBlock = new SmgImageBlock();
-        $imageBlock->object["imgPath"] = $imgPath;
-        return $imageBlock;
+        $object = [];
+        $object["qr"] = ["data" => $data];
+        if ($config != null) {
+            $configJson = $config->toJson();
+            if ($configJson != null) {
+                $object["qr"] = array_merge($object["qr"], json_decode($configJson, true));
+            }
+        }
+        return new SmgQrBlock($object);
     }
 
     public function width(int $width): self
@@ -81,7 +87,7 @@ class SmgImageBlock implements SmgBlock
     public function toJson(): ?string
     {
         $styles = new SmgMapStyles();
-        $styles->set('$img', $this->style);
+        $styles->set('$qr', $this->style);
         if (!$styles->isEmpty()) {
             $this->object["styles"] = json_decode($styles->toJson(), true);
         }
@@ -89,5 +95,4 @@ class SmgImageBlock implements SmgBlock
             return null;
         return json_encode($this->object);
     }
-
 }

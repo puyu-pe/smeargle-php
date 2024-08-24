@@ -22,7 +22,6 @@ class SmgPrintObjectConfig
         return new SmgPrintObjectConfig();
     }
 
-
     public function info(string $key, array|string $value): self
     {
         $this->metadata[$key] = $value;

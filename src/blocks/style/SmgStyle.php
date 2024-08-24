@@ -23,6 +23,12 @@ class SmgStyle
         return $newStyle;
     }
 
+    public function merge(SmgStyle $parentStyle): self
+    {
+        $this->object = array_merge($this->object, $parentStyle->object);
+        return $this;
+    }
+
     public function toJson(): ?string
     {
         if (count($this->object) == 0) {
