@@ -41,12 +41,14 @@ send_data($jsonString); // ejm. send data to local server PukaHTTP
 
 ## Bloques de texto :heavy_check_mark:
 
-Con componentes de texto, se puede crear diseños para tablas o simples 
-fragmentos de texto con la posibilidad de manipular la disposición de 
+Con componentes de texto, se puede crear diseños para tablas o simples
+fragmentos de texto con la posibilidad de manipular la disposición de
 cada elemento mediante configuraciones de estilo.
 
 ### Ejemplos
+
 - Prueba de impresión
+
 ```injectablephp
 $styles = new SmgMapStyles();
 $styles->set(0, SmgStyle::builder()->span(2)); // styles for column 0
@@ -65,10 +67,41 @@ $printConfig = SmgPrintObjectConfig::instance()->blockWidth(48);
 $jsonString = SmgPrintObject::build($printConfig)->block($testPrintBlock)->toJson();
 send_data($jsonString); // ejm. send data to local server PukaHTTP
 ```
-- Tablas 
 
-- Listas
+- Tabla de 3 columnas
+
+```injectablephp
+$styles = new SmgMapStyles();
+$styles->set(1, SmgStyle::builder()->center());
+$styles->set(2, SmgStyle::builder()->right());
+$styles->set("title", SmgStyle::builder()->center()->bold()->fontSize(2)->maxSpan());
+$styles->set("totalStr", SmgStyle::builder()->right()->maxSpan()->bold()->span(4));
+$styles->set("totalPrice", SmgStyle::builder()->right()->maxSpan()->bold());
+
+$header = new SmgRow(["Name", "Units", "Price"]);
+$body = array_map(function ($item) {
+    return new SmgRow([$item["name"], $item["units"], $item["price"]]);
+}, $items);
+$footer = new SmgRow([
+    new SmgCell("Total:", "totalStr"),
+    new SmgCell($total, "totalPrice")
+]);
+
+$tableConfig = SmgTextBlockConfig::instance()->styles($styles)->separator("|");
+$table = SmgTextBlock::build($tableConfig)
+    ->text("Tabla de precios", "title")
+    ->row($header)
+    ->line()
+    ->rows($body)
+    ->line()
+    ->row($footer);
+
+$printObjectConfig = SmgPrintObjectConfig::instance()->blockWidth(48)->openDrawer();
+$jsonString = SmgPrintObject::build($printObjectConfig)->block($table)->toJson();
+send_data($jsonString); // ejm. send data to local server PukaHTTP
+```
 
 ## Imagenes :heavy_check_mark:
+
 
 ## Qr :heavy_check_mark:

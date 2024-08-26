@@ -15,9 +15,27 @@ class SmgMapStyles
     {
         $jsonStyle = $style->toJson();
         if ($jsonStyle != null) {
-            $this->object[$classOrIndex] = json_decode($jsonStyle ,true);
+            $this->object[$classOrIndex] = json_decode($jsonStyle, true);
         }
         return $this;
+    }
+
+    public function get(string $class): ?SmgStyle
+    {
+        if ($this->has($class)) {
+            return SmgStyle::builder()->reset(json_decode($this->object[$class], true));
+        }
+        return null;
+    }
+
+    public function getOrCreate(string $class, SmgStyle $default): SmgStyle
+    {
+        if (!$this->has($class)) {
+            $this->set($class, $default);
+            return $default;
+        } else {
+            return $this->get($class) ?? $default;
+        }
     }
 
     public function remove(string|int $class): self

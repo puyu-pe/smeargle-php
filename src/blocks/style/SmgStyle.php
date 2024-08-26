@@ -11,6 +11,22 @@ class SmgStyle
         $this->object = [];
     }
 
+    public function reset(array $object = []): self
+    {
+        $this->object = [];
+        return $this;
+    }
+
+    public function buildUniqueClassName(): string
+    {
+        ksort($this->object);
+        $className = "$$";
+        foreach ($this->object as $key => $value) {
+            $className = $className . "_" . $key . "=" . $value;
+        }
+        return $className;
+    }
+
     public static function builder(): SmgStyle
     {
         return new SmgStyle();
@@ -27,6 +43,11 @@ class SmgStyle
     {
         $this->object = array_merge($this->object, $parentStyle->object);
         return $this;
+    }
+
+    public function isEmpty(): bool
+    {
+        return count($this->object) == 0;
     }
 
     public function toJson(): ?string

@@ -8,9 +8,9 @@ use PuyuPe\Smeargle\blocks\style\SmgStyle;
 
 class SmgTextBlock implements SmgBlock
 {
-    private array $object;
-    private array $rows;
-    private SmgMapStyles $styles;
+    protected array $object;
+    protected array $rows;
+    protected SmgMapStyles $styles;
 
     private function __construct(array $object, SmgMapStyles $styles)
     {
@@ -69,6 +69,35 @@ class SmgTextBlock implements SmgBlock
             $this->rows[] = json_decode($rows[$i]->toJson(), true);
         }
         return $this;
+    }
+
+    public function hasStyle(string $class): bool
+    {
+        return $this->styles->has($class);
+    }
+
+    public function addStyle(string $class, SmgStyle $style): self
+    {
+        if ($this->styles->has($class)) {
+            $mergeStyle = $this->styles->get($class)->merge($style);
+            $this->styles->set($class, $mergeStyle);
+        } else {
+            $this->styles->set($class, $style);
+        }
+        return $this;
+    }
+
+    public function createStyle(string $class, SmgStyle $style): self
+    {
+        if (!$this->styles->has($class)) {
+            $this->styles->set($class, $style);
+        }
+        return $this;
+    }
+
+    public function countRows(): int
+    {
+        return count($this->rows);
     }
 
     public static function build(?SmgTextBlockConfig $config = null): SmgTextBlock

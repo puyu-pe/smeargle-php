@@ -1,5 +1,5 @@
 {
-    "name": "socamaru/smeargle",
+    "name": "puyu-pe/smeargle",
     "description": "Utility for SweetTicketDesign and PukaHTTP",
     "type": "library",
     "license": "MIT",
@@ -10,8 +10,8 @@
     },
     "authors": [
         {
-            "name": "OscarDevCPP",
-            "email": "oscarchh0799@gmail.com"
+            "name": "PuyuPe",
+            "email": "-"
         }
     ],
     "require": {}
