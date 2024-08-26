@@ -47,7 +47,7 @@ class SmgPrintObject
         if (count($this->data) > 0) {
             $this->object["data"] = $this->data;
         }
-        return json_encode($this->object);
+        return json_encode($this->object, JSON_UNESCAPED_UNICODE);
     }
 }
 

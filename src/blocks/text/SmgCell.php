@@ -20,7 +20,7 @@ class SmgCell
         if ($this->class != null) {
             $cell["class"] = $this->class;
         }
-        return json_encode($cell);
+        return json_encode($cell, JSON_UNESCAPED_UNICODE);
     }
 
 }

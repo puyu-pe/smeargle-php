@@ -34,7 +34,7 @@ class SmgStyle
         if (count($this->object) == 0) {
             return null;
         }
-        return json_encode($this->object);
+        return json_encode($this->object, JSON_UNESCAPED_UNICODE);
     }
 
     public function fontWidth(int $fontWidth): self

@@ -9,7 +9,6 @@ use \PuyuPe\Smeargle\blocks\text\SmgRow;
 use \PuyuPe\Smeargle\blocks\text\SmgCell;
 use \PuyuPe\Smeargle\SmgPrintObjectConfig;
 use \PuyuPe\Smeargle\SmgPrintObject;
-use \PuyuPe\Smeargle\properties\SmgProperties;
 use \PuyuPe\Smeargle\properties\SmgCutProperty;
 use \PuyuPe\Smeargle\properties\SmgCutMode;
 use \PuyuPe\Smeargle\opendrawer\SmgDrawer;
@@ -19,60 +18,42 @@ use \PuyuPe\Smeargle\blocks\style\SmgScale;
 use \PuyuPe\Smeargle\blocks\qr\SmgQrBlock;
 use \PuyuPe\Smeargle\blocks\qr\SmgQrConfig;
 
-$mapStyles = new SmgMapStyles();
-$mapStyles->set("own-style", SmgStyle::builder()->width(255));
-$mapStyles->set("mirror-style", SmgStyle::builder()->height(234)->span(2));
-$mapStyles->set("class1", SmgStyle::builder()->left()->span(7));
-$config = SmgTextBlockConfig::instance()
-    ->nColumns(6)
-    ->styles($mapStyles)
-    ->separator("|");
-
-$style = SmgStyle::builder()->normalize()->bgInverted()->center()->bold();
-$row = new SmgRow(["hello", "fddsf", 3, new SmgCell("cell1", "class1")]);
-$row->addAll(["add1", 34]);
-$textBlock = SmgTextBlock::build($config)
-    ->row($row)
-    ->text(2, $style)
-    ->text("mirror-text", "mirror-style")
-    ->line()
-    ->line("*");
-
-$imageBlock = SmgImageBlock::build('c:\\lele')
-    ->center()
-    ->scale(SmgScale::SMOOTH)
-    ->style(SmgStyle::builder()->height(255)->width(4040))
-    ->size(4)
-    ->width(10)
-    ->height(20);
-
-
-$qrConfig = SmgQrConfig::instance()->low()->native();
-$qrBlock = SmgQrBlock::build("fdfasfasf")
-    ->width(34)
-    ->center()
-    ->scale(SmgScale::REPLICATE)
-    ->height(100);
-
-$openDrawer = SmgDrawer::builder()->pin(SmgDrawerPin::_5)->t1(120)->t2(240);
-$cut = SmgCutProperty::builder()->feed(4)->mode(SmgCutMode::PART);
-
-$printer = [
-    "name" => "EPSON",
-    "type" => "SYSTEM"
+$items = [
+    ["name" => "leche", "price" => "3.75", "units" => 4],
+    ["name" => "arroz", "price" => "5.0", "units" => 1],
+    ["name" => "azucar", "price" => "7.00", "units" => 2],
+    ["name" => "cafe", "price" => "8.30", "units" => 5],
+    ["name" => "gaseosa", "price" => "9.55", "units" => 1]
 ];
+$total = "490.75";
 
-$printObjectConfig = SmgPrintObjectConfig::instance()
-    ->info("times", 1)
-    ->info("printer", $printer)
-    ->blockWidth(48)
-    ->normalize()
-    ->openDrawer($openDrawer);
+$styles = new SmgMapStyles();
+$styles->set(1, SmgStyle::builder()->center());
+$styles->set(2, SmgStyle::builder()->right());
+$styles->set("title", SmgStyle::builder()->center()->bold()->fontSize(2)->maxSpan());
+$styles->set("totalStr", SmgStyle::builder()->right()->maxSpan()->bold()->span(4));
+$styles->set("totalPrice", SmgStyle::builder()->right()->maxSpan()->bold());
 
-$printObject = SmgPrintObject::build($printObjectConfig)
-    ->text("hola")
-    ->block($textBlock)
-    ->block($imageBlock)
-    ->block($qrBlock);
+$header = new SmgRow(["Name", "Units", "Price"]);
+$body = array_map(function ($item) {
+    return new SmgRow([$item["name"], $item["units"], $item["price"]]);
+}, $items);
+$footer = new SmgRow([
+    new SmgCell("Total:", "totalStr"),
+    new SmgCell($total, "totalPrice")
+]);
 
-echo json_encode(json_decode($printObject->toJson(), true), JSON_PRETTY_PRINT);
+$tableConfig = SmgTextBlockConfig::instance()->styles($styles)->separator("|");
+$table = SmgTextBlock::build($tableConfig)
+    ->text("Tabla de precios", "title")
+    ->row($header)
+    ->line()
+    ->rows($body)
+    ->line()
+    ->row($footer);
+
+$printObjectConfig = SmgPrintObjectConfig::instance()->blockWidth(48)->openDrawer();
+$jsonString = SmgPrintObject::build($printObjectConfig)->block($table)->toJson();
+
+
+echo json_encode(json_decode($jsonString, true), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);

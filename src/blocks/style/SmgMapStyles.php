@@ -11,11 +11,11 @@ class SmgMapStyles
         $this->object = [];
     }
 
-    public function set(string|int $class, SmgStyle $style): self
+    public function set(string|int $classOrIndex, SmgStyle $style): self
     {
         $jsonStyle = $style->toJson();
         if ($jsonStyle != null) {
-            $this->object[$class] = json_decode($jsonStyle ,true);
+            $this->object[$classOrIndex] = json_decode($jsonStyle ,true);
         }
         return $this;
     }
@@ -51,7 +51,7 @@ class SmgMapStyles
         if ($this->isEmpty()) {
             return null;
         }
-        return json_encode($this->object);
+        return json_encode($this->object, JSON_UNESCAPED_UNICODE);
     }
 
 }

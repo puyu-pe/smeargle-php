@@ -57,6 +57,14 @@ class SmgTextBlock implements SmgBlock
 
     public function row(SmgRow ...$rows): self
     {
+        return $this->rows($rows);
+    }
+
+    /**
+     * @param SmgRow[] $rows
+     */
+    public function rows(array $rows): self
+    {
         for ($i = 0; $i < count($rows); ++$i) {
             $this->rows[] = json_decode($rows[$i]->toJson(), true);
         }
@@ -88,6 +96,6 @@ class SmgTextBlock implements SmgBlock
         if (count($this->object) == 0) {
             return null;
         }
-        return json_encode($this->object);
+        return json_encode($this->object, JSON_UNESCAPED_UNICODE);
     }
 }
