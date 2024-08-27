@@ -51,17 +51,17 @@ cada elemento mediante configuraciones de estilo.
 
 ```injectablephp
 $testPrintConfig = SmgTextBlockConfig::instance()
-    ->styleForColumn(0, Smg::span(2))
-    ->styleForColumn(1, Smg::maxSpan());
+    ->styleForColumn(0, Smg::span(2)) // style for column 1
+    ->styleForColumn(1, Smg::maxSpan()); // style for column 2
 
 $test = new SmgVerticalLayout($testPrintConfig);
 $test
     ->title("Servicio de impresión PUKA - PUYU")
     ->toCenter("Esta es una prueba de impresión")
     ->line("*")
-    ->row(new SmgRow(["name_system:", "192.168.18.39"]))
-    ->row(new SmgRow(["port:", "9100"]))
-    ->row(new SmgRow(["blockWidth:", "48"]))
+    ->row(["name_system:", "192.168.18.39"])
+    ->row(["port:", "9100"])
+    ->row(["blockWidth:", "48"])
     ->line()
     ->toCenter("Gracias, que tenga  un buen dia.");
 

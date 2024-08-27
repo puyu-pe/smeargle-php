@@ -19,14 +19,14 @@ class Smg
         return SmgStyle::builder()->right();
     }
 
-    public static function bold(): SmgStyle
+    public static function bold(bool $bold = true): SmgStyle
     {
-        return SmgStyle::builder()->bold();
+        return SmgStyle::builder()->bold($bold);
     }
 
-    public static function normalize(): SmgStyle
+    public static function normalize(bool $normalize = false): SmgStyle
     {
-        return SmgStyle::builder()->normalize();
+        return SmgStyle::builder()->normalize($normalize);
     }
 
     public static function fontWidth(int $fontWidth): SmgStyle
@@ -44,9 +44,9 @@ class Smg
         return SmgStyle::builder()->fontSize($fontSize);
     }
 
-    public static function bgInverted(): SmgStyle
+    public static function bgInverted(bool $bgInverted): SmgStyle
     {
-        return SmgStyle::builder()->bgInverted();
+        return SmgStyle::builder()->bgInverted($bgInverted);
     }
 
     public static function pad(string $char): SmgStyle
@@ -107,6 +107,16 @@ class Smg
     public static function centerBoldMaxSpan(): SmgStyle
     {
         return SmgStyle::builder()->center()->bold()->maxSpan();
+    }
+
+    public static function ifElse(bool $flag, SmgStyle $true, SmgStyle $false): SmgStyle
+    {
+        return $flag ? $true : $false;
+    }
+
+    public static function if(bool $flag, SmgStyle $true): ?SmgStyle
+    {
+        return $flag ? $true : null;
     }
 
     public static function title(): SmgStyle

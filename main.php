@@ -42,6 +42,18 @@ $test
     ->line()
     ->toCenter("Gracias, que tenga  un buen dia.");
 
+/*
+ for(){
+    ->toCenter("precuenta", Smg::ifElse(support, Smg::bgInverted(), Smg::pad(*)->bold()));
+    $row = new SmgRow();
+    $row->add("text",  Smg::bold());
+    $row->add("text",  Smg::if($mount > 0, Smg::bold());
+    $row->add("text", Smg::center()->bgInverted()->maxSpan());
+    $test->row($row);
+ }
+
+ * */
+
 $printObjectConfig = SmgPrintObjectConfig::instance()->blockWidth(48);
 $jsonString = SmgPrintObject::build($printObjectConfig)->block($test)->toJson();
 
