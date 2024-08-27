@@ -23,8 +23,9 @@ class SmgTextBlock implements SmgBlock
     {
         if ($char == null) $char = "-";
         if ($style == null) $style = SmgStyle::builder()->fontWidth(1);
-        $class = '$line_' . count($this->rows);
-        $this->styles->set($class, SmgStyle::copy($style)->pad($char)->span(1000));
+        $style = SmgStyle::copy($style)->pad($char)->span(1000);
+        $class = '$line_' . $style->uniqueClassName();
+        $this->createStyle($class, $style);
         $this->rows[] = json_decode((new SmgCell("", $class))->toJson(), true);
         return $this;
     }
@@ -34,7 +35,7 @@ class SmgTextBlock implements SmgBlock
      */
     public function texts(array $texts, SmgStyle|string|null $styleOrClass = null): self
     {
-        $class = is_string($styleOrClass) ? $styleOrClass : '$text_' . count($this->rows);
+        $class = is_string($styleOrClass) ? $styleOrClass : '$text_' . $styleOrClass->uniqueClassName();
         if ($styleOrClass != null && !is_string($styleOrClass)) {
             $this->styles->set($class, $styleOrClass);
         }

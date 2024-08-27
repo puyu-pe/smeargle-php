@@ -18,8 +18,22 @@ use \PuyuPe\Smeargle\blocks\style\SmgScale;
 use \PuyuPe\Smeargle\blocks\qr\SmgQrBlock;
 use \PuyuPe\Smeargle\blocks\qr\SmgQrConfig;
 use \PuyuPe\Smeargle\blocks\style\Smg;
+use \PuyuPe\Smeargle\blocks\text\SmgVerticalLayout;
 
 
+$test = new SmgVerticalLayout();
+$test
+    ->line()
+    ->line()
+    ->line()
+    ->line()
+    ->line()
+    ->toCenter("hola")
+    ->line("*")
+    ->toRight("jajaja", Smg::bold());
+
+$printObjectConfig = SmgPrintObjectConfig::instance()->blockWidth(48);
+$jsonString = SmgPrintObject::build($printObjectConfig)->block($test)->toJson();
 
 
-echo json_encode(json_decode($business, true), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+echo json_encode(json_decode($jsonString, true), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
