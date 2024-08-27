@@ -16,6 +16,12 @@ class SmgVerticalLayout implements SmgBlock
         $this->textBlock = SmgTextBlock::build($config);
     }
 
+    public function line(?string $char = null, ?SmgStyle $style = null): self
+    {
+        $this->textBlock->line($char, $style);
+        return $this;
+    }
+
     public function toCenter(string $text, ?SmgStyle $customStyle = null): self
     {
         return $this->custom($text, Smg::center(), $customStyle);
