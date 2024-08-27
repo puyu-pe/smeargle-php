@@ -14,12 +14,12 @@ class SmgRow
     /**
      * @param string[] $row
      */
-    public function __construct(array $row = [])
+    public function __construct(array $row = [], SmgStyle|string|null $styleOrClass = null)
     {
         $this->object = [];
         $this->styles = new SmgMapStyles();
         for ($i = 0; $i < count($row); ++$i) {
-            $this->add($row[$i]);
+            $this->add($row[$i], $styleOrClass);
         }
     }
 

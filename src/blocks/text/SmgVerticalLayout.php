@@ -21,14 +21,31 @@ class SmgVerticalLayout implements SmgBlock
         return $this;
     }
 
+
     /**
-     * @param string[]|SmgRow $row
+     * @param SmgRow[] $rows
      */
-    public function row(array|SmgRow $row): self
+    public function rows(array $rows): self
     {
-        if (is_array($row)) {
-            $row = new SmgRow($row);
+        foreach ($rows as $row) {
+            $this->row($row);
         }
+        return $this;
+    }
+
+    public function row(SmgRow $row): self
+    {
+        $this->textBlock->row($row);
+        return $this;
+    }
+
+    /**
+     * @param string[] $row
+     */
+
+    public function simpleRow(array $row, SmgStyle|string|null $styleOrClass = null): self
+    {
+        $row = new SmgRow($row, $styleOrClass);
         $this->textBlock->row($row);
         return $this;
     }

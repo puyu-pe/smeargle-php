@@ -20,41 +20,42 @@ use \PuyuPe\Smeargle\blocks\qr\SmgQrConfig;
 use \PuyuPe\Smeargle\blocks\style\Smg;
 use \PuyuPe\Smeargle\blocks\text\SmgVerticalLayout;
 
-$testPrintConfig = SmgTextBlockConfig::instance()
-    ->styleForColumn(0, Smg::span(2))
-    ->styleForClass("customClass", Smg::bold()->bgInverted()->maxSpan())
-    ->styleForClass("rowClass", Smg::bold()->bgInverted()->maxSpan()->right())
-    ->styleForColumn(1, Smg::maxSpan());
+$products = [
+    ["name" => "item1", "units" => "3", "price" => "3.50"],
+    ["name" => "item2", "units" => "5", "price" => "6.20"],
+    ["name" => "item3", "units" => "1", "price" => "1.20"],
+    ["name" => "item4", "units" => "2", "price" => "9.30"],
+    ["name" => "item5", "units" => "1", "price" => "4.30"],
+    ["name" => "item6", "units" => "1", "price" => "5.70"],
+];
 
-$testRow = new SmgRow();
-$testRow->add("customRow", "rowClass");
+$header = new SmgRow(["header1", "header2", "header3"], Smg::bold());
 
-$test = new SmgVerticalLayout($testPrintConfig);
-$test
-    ->title("Servicio de impresión PUKA - PUYU")
-    ->toCenter("Esta es una prueba de impresión")
+$body = array_map(function ($product) {
+    return new SmgRow([$product["name"], $product["units"], $product["price"]]);
+}, $products);
+
+$footer = new SmgRow();
+$footer->add("total:", Smg::bold()->right()->span(4));
+$footer->add("450.47");
+
+$tablePrintConfig = SmgTextBlockConfig::instance()
+    ->separator("|")
+    ->styleForColumn(0, Smg::left())
+    ->styleForColumn(1, Smg::center())
+    ->styleForColumn(2, Smg::right());
+
+$table = new SmgVerticalLayout($tablePrintConfig);
+$table
+    ->title("Tabla de ejemplo")
     ->line("*")
-    ->row(["name_system:", "192.168.18.39"])
-    ->row(["port:", "9100"])
-    ->row(new SmgRow(["blockWidth:", "48"]))
-    ->row($testRow)
-    ->textWithClass("custom text", "customClass")
+    ->row($header)
     ->line()
-    ->toCenter("Gracias, que tenga  un buen dia.");
-
-/*
- for(){
-    ->toCenter("precuenta", Smg::ifElse(support, Smg::bgInverted(), Smg::pad(*)->bold()));
-    $row = new SmgRow();
-    $row->add("text",  Smg::bold());
-    $row->add("text",  Smg::if($mount > 0, Smg::bold());
-    $row->add("text", Smg::center()->bgInverted()->maxSpan());
-    $test->row($row);
- }
-
- * */
+    ->rows($body)
+    ->line()
+    ->row($footer);
 
 $printObjectConfig = SmgPrintObjectConfig::instance()->blockWidth(48);
-$jsonString = SmgPrintObject::build($printObjectConfig)->block($test)->toJson();
+$jsonString = SmgPrintObject::build($printObjectConfig)->block($table)->toJson();
 
 echo json_encode(json_decode($jsonString, true), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);

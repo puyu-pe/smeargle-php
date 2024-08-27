@@ -28,15 +28,12 @@ con la ayuda de [PukaHTTP](https://github.com/puyu-pe/puka-http).
 composer require puyu-pe/smeargle 
 ```
 
-### Ejemplo :bookmark_tabs:
+### Api :bookmark_tabs:
+
+###
 
 ```injectablephp
-$printer = ["name" => "192.168.18.39", "type" => "ethernet"];
-$printConfig = SmgPrintObjectConfig::instance()->info("printer", $printer);
-$jsonString = SmgPrintObject::build($printConfig)
-    ->text("hello word.")
-    ->toJson();
-send_data($jsonString); // ejm. send data to local server PukaHTTP
+
 ```
 
 ## Bloques de texto :heavy_check_mark:
@@ -59,9 +56,9 @@ $test
     ->title("Servicio de impresión PUKA - PUYU")
     ->toCenter("Esta es una prueba de impresión")
     ->line("*")
-    ->row(["name_system:", "192.168.18.39"])
-    ->row(["port:", "9100"])
-    ->row(["blockWidth:", "48"])
+    ->simpleRow(["name_system:", "192.168.18.39"])
+    ->simpleRow(["port:", "9100"])
+    ->simpleRow(["blockWidth:", "48"])
     ->line()
     ->toCenter("Gracias, que tenga  un buen dia.");
 
@@ -70,40 +67,40 @@ $jsonString = SmgPrintObject::build($printObjectConfig)->block($test)->toJson();
 send_data($jsonString); // ejm. send data to local server PukaHTTP
 ```
 
-- Tabla de 3 columnas
+- Tabla de productos
 
 ```injectablephp
-$styles = new SmgMapStyles();
-$styles->set(1, SmgStyle::builder()->center());
-$styles->set(2, SmgStyle::builder()->right());
-$styles->set("title", SmgStyle::builder()->center()->bold()->fontSize(2)->maxSpan());
-$styles->set("totalStr", SmgStyle::builder()->right()->maxSpan()->bold()->span(4));
-$styles->set("totalPrice", SmgStyle::builder()->right()->maxSpan()->bold());
+$header = new SmgRow(["header1", "header2", "header3"], Smg::bold());
 
-$header = new SmgRow(["Name", "Units", "Price"]);
-$body = array_map(function ($item) {
-    return new SmgRow([$item["name"], $item["units"], $item["price"]]);
-}, $items);
-$footer = new SmgRow([
-    new SmgCell("Total:", "totalStr"),
-    new SmgCell($total, "totalPrice")
-]);
+$body = array_map(function ($product) {
+    return new SmgRow([$product["name"], $product["units"], $product["price"]]);
+}, $products);
 
-$tableConfig = SmgTextBlockConfig::instance()->styles($styles)->separator("|");
-$table = SmgTextBlock::build($tableConfig)
-    ->text("Tabla de precios", "title")
+$footer = new SmgRow();
+$footer->add("total:", Smg::bold()->right()->span(4));
+$footer->add("450.47");
+
+$tablePrintConfig = SmgTextBlockConfig::instance()
+    ->separator("|")
+    ->styleForColumn(0, Smg::left())
+    ->styleForColumn(1, Smg::center())
+    ->styleForColumn(2, Smg::right());
+
+$table = new SmgVerticalLayout($tablePrintConfig);
+$table
+    ->title("Tabla de ejemplo")
+    ->line("*")
     ->row($header)
     ->line()
     ->rows($body)
     ->line()
     ->row($footer);
 
-$printObjectConfig = SmgPrintObjectConfig::instance()->blockWidth(48)->openDrawer();
+$printObjectConfig = SmgPrintObjectConfig::instance()->blockWidth(48);
 $jsonString = SmgPrintObject::build($printObjectConfig)->block($table)->toJson();
 send_data($jsonString); // ejm. send data to local server PukaHTTP
 ```
 
 ## Imagenes :heavy_check_mark:
-
 
 ## Qr :heavy_check_mark:
