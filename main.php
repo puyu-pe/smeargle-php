@@ -20,7 +20,6 @@ use \PuyuPe\Smeargle\blocks\qr\SmgQrConfig;
 use \PuyuPe\Smeargle\blocks\style\Smg;
 use \PuyuPe\Smeargle\blocks\text\SmgVerticalLayout;
 
-
 $testPrintConfig = SmgTextBlockConfig::instance()
     ->styleForColumn(0, Smg::span(2))
     ->styleForClass("customClass", Smg::bold()->bgInverted()->maxSpan())
@@ -35,8 +34,8 @@ $test
     ->title("Servicio de impresión PUKA - PUYU")
     ->toCenter("Esta es una prueba de impresión")
     ->line("*")
-    ->row(new SmgRow(["name_system:", "192.168.18.39"]))
-    ->row(new SmgRow(["port:", "9100"]))
+    ->row(["name_system:", "192.168.18.39"])
+    ->row(["port:", "9100"])
     ->row(new SmgRow(["blockWidth:", "48"]))
     ->row($testRow)
     ->textWithClass("custom text", "customClass")
@@ -45,6 +44,5 @@ $test
 
 $printObjectConfig = SmgPrintObjectConfig::instance()->blockWidth(48);
 $jsonString = SmgPrintObject::build($printObjectConfig)->block($test)->toJson();
-
 
 echo json_encode(json_decode($jsonString, true), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
