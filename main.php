@@ -21,16 +21,27 @@ use \PuyuPe\Smeargle\blocks\style\Smg;
 use \PuyuPe\Smeargle\blocks\text\SmgVerticalLayout;
 
 
-$test = new SmgVerticalLayout();
+$testPrintConfig = SmgTextBlockConfig::instance()
+    ->styleForColumn(0, Smg::span(2))
+    ->styleForClass("customClass", Smg::bold()->bgInverted()->maxSpan())
+    ->styleForClass("rowClass", Smg::bold()->bgInverted()->maxSpan()->right())
+    ->styleForColumn(1, Smg::maxSpan());
+
+$testRow = new SmgRow();
+$testRow->add("customRow", "rowClass");
+
+$test = new SmgVerticalLayout($testPrintConfig);
 $test
-    ->line()
-    ->line()
-    ->line()
-    ->line()
-    ->line()
-    ->toCenter("hola")
+    ->title("Servicio de impresión PUKA - PUYU")
+    ->toCenter("Esta es una prueba de impresión")
     ->line("*")
-    ->toRight("jajaja", Smg::bold());
+    ->row(new SmgRow(["name_system:", "192.168.18.39"]))
+    ->row(new SmgRow(["port:", "9100"]))
+    ->row(new SmgRow(["blockWidth:", "48"]))
+    ->row($testRow)
+    ->textWithClass("custom text", "customClass")
+    ->line()
+    ->toCenter("Gracias, que tenga  un buen dia.");
 
 $printObjectConfig = SmgPrintObjectConfig::instance()->blockWidth(48);
 $jsonString = SmgPrintObject::build($printObjectConfig)->block($test)->toJson();

@@ -50,21 +50,23 @@ cada elemento mediante configuraciones de estilo.
 - Prueba de impresión
 
 ```injectablephp
-$styles = new SmgMapStyles();
-$styles->set(0, SmgStyle::builder()->span(2)); // styles for column 0
-$styles->set(1, SmgStyle::builder()->maxSpan()); // styles for column 1
+$testPrintConfig = SmgTextBlockConfig::instance()
+    ->styleForColumn(0, Smg::span(2))
+    ->styleForColumn(1, Smg::maxSpan());
 
-$testPrintConfig = SmgTextBlockConfig::instance()->styles($styles);
-$testPrintBlock = SmgTextBlock::build($testPrintConfig)
-    ->text("Servicio de impresión PUKA  PUYU", SmgStyle::builder()->center()->maxSpan()->fontSize(2)->bold())
-    ->text("Esta es una prueba de impresión.", SmgStyle::builder()->center()->maxSpan())
+$test = new SmgVerticalLayout($testPrintConfig);
+$test
+    ->title("Servicio de impresión PUKA - PUYU")
+    ->toCenter("Esta es una prueba de impresión")
     ->line("*")
-    ->row(new SmgRow(["printer:", "192.168.18.39"]), new SmgRow(["type:", "ethernet"]))
+    ->row(new SmgRow(["name_system:", "192.168.18.39"]))
+    ->row(new SmgRow(["port:", "9100"]))
+    ->row(new SmgRow(["blockWidth:", "48"]))
     ->line()
-    ->text("Gracias que tenga un buen dia.", SmgStyle::builder()->center()->maxSpan());
+    ->toCenter("Gracias, que tenga  un buen dia.");
 
-$printConfig = SmgPrintObjectConfig::instance()->blockWidth(48);
-$jsonString = SmgPrintObject::build($printConfig)->block($testPrintBlock)->toJson();
+$printObjectConfig = SmgPrintObjectConfig::instance()->blockWidth(48);
+$jsonString = SmgPrintObject::build($printObjectConfig)->block($test)->toJson();
 send_data($jsonString); // ejm. send data to local server PukaHTTP
 ```
 

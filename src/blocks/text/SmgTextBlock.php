@@ -68,6 +68,7 @@ class SmgTextBlock implements SmgBlock
     {
         for ($i = 0; $i < count($rows); ++$i) {
             $this->rows[] = json_decode($rows[$i]->toJson(), true);
+            $this->styles->merge($rows[$i]->getStyles());
         }
         return $this;
     }
@@ -90,15 +91,8 @@ class SmgTextBlock implements SmgBlock
 
     public function createStyle(string $class, SmgStyle $style): self
     {
-        if (!$this->styles->has($class)) {
-            $this->styles->set($class, $style);
-        }
+        $this->styles->setIfNotExists($class, $style);
         return $this;
-    }
-
-    public function countRows(): int
-    {
-        return count($this->rows);
     }
 
     public static function build(?SmgTextBlockConfig $config = null): SmgTextBlock

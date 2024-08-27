@@ -2,70 +2,48 @@
 
 namespace PuyuPe\Smeargle\blocks\text;
 
+use PuyuPe\Smeargle\blocks\style\SmgMapStyles;
+use PuyuPe\Smeargle\blocks\style\SmgStyle;
+
 class SmgRow
 {
 
     private array $object;
+    private SmgMapStyles $styles;
 
     /**
-     * @param string[]|int[]|SmgCell[] $values
+     * @param string[] $row
      */
-    public function __construct(array $values = [])
+    public function __construct(array $row = [])
     {
         $this->object = [];
-        $this->addAll($values);
+        $this->styles = new SmgMapStyles();
+        for ($i = 0; $i < count($row); ++$i) {
+            $this->add($row[$i]);
+        }
     }
 
-    /**
-     * @param string[]|int[] $texts
-     */
-    public function addTextList(array $texts, ?string $class = null): self
+    public function add(string $text, SmgStyle|string|null $styleOrClass = null): self
     {
-        for ($i = 0; $i < count($texts); ++$i) {
-            if (is_int($texts[$i]) || is_string($texts[$i])) {
-                $this->addText($texts[$i], $class);
+        $cell = new SmgCell($text);
+        if ($styleOrClass != null) {
+            if (!is_string($styleOrClass)) {
+                if (!$styleOrClass->isEmpty()) {
+                    $class = $styleOrClass->uniqueClassName();
+                    $this->styles->setIfNotExists($class, $styleOrClass);
+                    $cell = new SmgCell($text, $class);
+                }
+            } else {
+                $cell = new SmgCell($text, $styleOrClass); // $style like className
             }
         }
+        $this->object[] = json_decode($cell->toJson(), true);
         return $this;
     }
 
-    public function addText(string|int $text, ?string $class = null): self
+    public function getStyles(): SmgMapStyles
     {
-        if ($class != null) {
-            $this->object[] = json_decode((new SmgCell($text, $class))->toJson(), true);
-        } else {
-            $this->object[] = $text;
-        }
-        return $this;
-    }
-
-    public function addCell(SmgCell ...$cells): self
-    {
-        for ($i = 0; $i < count($cells); ++$i) {
-            $this->object[] = json_decode($cells[$i]->toJson(), true);
-        }
-        return $this;
-    }
-
-    /**
-     * @param string[]|int[]|SmgCell[] $values
-     */
-    public function addAll(array $values): self
-    {
-        for ($i = 0; $i < count($values); ++$i) {
-            $this->add($values[$i]);
-        }
-        return $this;
-    }
-
-    public function add(string|int|SmgCell $value): self
-    {
-        if (is_int($value) || is_string($value)) {
-            $this->addText($value);
-        } else {
-            $this->addCell($value);
-        }
-        return $this;
+        return $this->styles;
     }
 
     public function toJson(): ?string

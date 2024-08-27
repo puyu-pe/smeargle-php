@@ -21,6 +21,12 @@ class SmgVerticalLayout implements SmgBlock
         return $this;
     }
 
+    public function row(SmgRow $row): self
+    {
+        $this->textBlock->row($row);
+        return $this;
+    }
+
     public function toCenter(string $text, ?SmgStyle $customStyle = null): self
     {
         return $this->custom($text, Smg::centerMaxSpan(), $customStyle);
@@ -53,6 +59,12 @@ class SmgVerticalLayout implements SmgBlock
         }
         $class = $primaryStyle->uniqueClassName();
         $this->textBlock->createStyle($class, $primaryStyle);
+        $this->textBlock->text($text, $class);
+        return $this;
+    }
+
+    public function textWithClass(string $text, string $class): self
+    {
         $this->textBlock->text($text, $class);
         return $this;
     }
