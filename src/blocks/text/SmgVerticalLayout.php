@@ -10,10 +10,48 @@ class SmgVerticalLayout implements SmgBlock
 {
     private SmgTextBlock $textBlock;
 
-    public function __construct()
+    public function __construct(?SmgTextBlockConfig $config = null)
     {
-        $config = SmgTextBlockConfig::instance()->nColumns(1);
         $this->textBlock = SmgTextBlock::build($config);
+    }
+
+    public static function build(?SmgTextBlockConfig $config = null): SmgVerticalLayout
+    {
+        return new SmgVerticalLayout($config);
+    }
+
+    public function line(?string $char = null, ?SmgStyle $style = null): self
+    {
+        $this->textBlock->line($char, $style);
+        return $this;
+    }
+
+    /**
+     * @param SmgRow[] $rows
+     */
+    public function rows(array $rows): self
+    {
+        foreach ($rows as $row) {
+            $this->row($row);
+        }
+        return $this;
+    }
+
+    public function row(SmgRow $row): self
+    {
+        $this->textBlock->row($row);
+        return $this;
+    }
+
+    /**
+     * @param string[] $row
+     */
+
+    public function simpleRow(array $row, SmgStyle|string|null $styleOrClass = null): self
+    {
+        $row = new SmgRow($row, $styleOrClass);
+        $this->textBlock->row($row);
+        return $this;
     }
 
     public function toCenter(string $text, ?SmgStyle $customStyle = null): self
@@ -46,8 +84,15 @@ class SmgVerticalLayout implements SmgBlock
         if ($secondaryStyle != null && !$secondaryStyle->isEmpty()) {
             $primaryStyle = SmgStyle::copy($secondaryStyle)->merge($primaryStyle);
         }
-        $class = $primaryStyle->buildUniqueClassName();
+        $primaryStyle->maxSpan();
+        $class = $primaryStyle->uniqueClassName();
         $this->textBlock->createStyle($class, $primaryStyle);
+        $this->textBlock->text($text, $class);
+        return $this;
+    }
+
+    public function textWithClass(string $text, string $class): self
+    {
         $this->textBlock->text($text, $class);
         return $this;
     }

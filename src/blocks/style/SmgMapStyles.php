@@ -49,6 +49,14 @@ class SmgMapStyles
         return array_key_exists($class, $this->object);
     }
 
+    public function setIfNotExists(string $class, SmgStyle $style): self
+    {
+        if (!$this->has($class)) {
+            $this->set($class, $style);
+        }
+        return $this;
+    }
+
     public static function copy(SmgMapStyles $styles): SmgMapStyles
     {
         $newStyles = new SmgMapStyles();
@@ -57,6 +65,12 @@ class SmgMapStyles
             $newStyles->object = json_decode($copy, true);
         }
         return $newStyles;
+    }
+
+    public function merge(SmgMapStyles $otherStyles): self
+    {
+        $this->object = array_merge($this->object, $otherStyles->object);
+        return $this;
     }
 
     public function isEmpty(): bool

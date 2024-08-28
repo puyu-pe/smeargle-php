@@ -11,8 +11,14 @@
     "authors": [
         {
             "name": "PuyuPe",
-            "email": "-"
+            "email": "puyu.pe@gmail.com"
+        },
+        {
+            "name": "OscarDevCPP",
+            "email": "oscarchh0799@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "php": ">=8.2.0"
+    }
 }

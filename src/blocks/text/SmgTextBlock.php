@@ -23,8 +23,9 @@ class SmgTextBlock implements SmgBlock
     {
         if ($char == null) $char = "-";
         if ($style == null) $style = SmgStyle::builder()->fontWidth(1);
-        $class = '$line_' . count($this->rows);
-        $this->styles->set($class, SmgStyle::copy($style)->pad($char)->span(1000));
+        $style = SmgStyle::copy($style)->pad($char)->span(1000);
+        $class = '$line_' . $style->uniqueClassName();
+        $this->createStyle($class, $style);
         $this->rows[] = json_decode((new SmgCell("", $class))->toJson(), true);
         return $this;
     }
@@ -34,7 +35,7 @@ class SmgTextBlock implements SmgBlock
      */
     public function texts(array $texts, SmgStyle|string|null $styleOrClass = null): self
     {
-        $class = is_string($styleOrClass) ? $styleOrClass : '$text_' . count($this->rows);
+        $class = is_string($styleOrClass) ? $styleOrClass : '$text_' . $styleOrClass->uniqueClassName();
         if ($styleOrClass != null && !is_string($styleOrClass)) {
             $this->styles->set($class, $styleOrClass);
         }
@@ -67,6 +68,7 @@ class SmgTextBlock implements SmgBlock
     {
         for ($i = 0; $i < count($rows); ++$i) {
             $this->rows[] = json_decode($rows[$i]->toJson(), true);
+            $this->styles->merge($rows[$i]->getStyles());
         }
         return $this;
     }
@@ -89,15 +91,8 @@ class SmgTextBlock implements SmgBlock
 
     public function createStyle(string $class, SmgStyle $style): self
     {
-        if (!$this->styles->has($class)) {
-            $this->styles->set($class, $style);
-        }
+        $this->styles->setIfNotExists($class, $style);
         return $this;
-    }
-
-    public function countRows(): int
-    {
-        return count($this->rows);
     }
 
     public static function build(?SmgTextBlockConfig $config = null): SmgTextBlock

@@ -17,10 +17,10 @@ class SmgStyle
         return $this;
     }
 
-    public function buildUniqueClassName(): string
+    public function uniqueClassName(): string
     {
         ksort($this->object);
-        $className = "$$";
+        $className = "style";
         foreach ($this->object as $key => $value) {
             $className = $className . "_" . $key . "=" . $value;
         }
@@ -105,7 +105,7 @@ class SmgStyle
 
     public function align(SmgJustify $justify): self
     {
-        $this->object["align"] = $justify;
+        $this->object["align"] = $justify->getValue();
         return $this;
     }
 

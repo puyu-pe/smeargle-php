@@ -3,6 +3,7 @@
 namespace PuyuPe\Smeargle\blocks\text;
 
 use PuyuPe\Smeargle\blocks\style\SmgMapStyles;
+use PuyuPe\Smeargle\blocks\style\SmgStyle;
 
 class SmgTextBlockConfig
 {
@@ -40,9 +41,21 @@ class SmgTextBlockConfig
         return $this;
     }
 
+    public function styleForColumn(int $index, SmgStyle $style): self
+    {
+        $this->styles->setIfNotExists($index, $style);
+        return $this;
+    }
+
+    public function styleForClass(string $class, SmgStyle $style): self
+    {
+        $this->styles->setIfNotExists($class, $style);
+        return $this;
+    }
+
     public function styles(SmgMapStyles $styles): self
     {
-        $this->styles = SmgMapStyles::copy($styles);
+        $this->styles = $this->styles->merge($styles);
         return $this;
     }
 
