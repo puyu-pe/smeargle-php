@@ -1,3 +1,5 @@
+<div style="text-align: center;">
+
 ```textmate
    ▄▄▄▄▄   █▀▄▀█ ▄███▄   ██   █▄▄▄▄   ▄▀  █     ▄███▄   
   █     ▀▄ █ █ █ █▀   ▀  █ █  █  ▄▀ ▄▀    █     █▀   ▀  
@@ -7,28 +9,37 @@
              ▀             █   ▀                        
                           ▀                             
 ```
+</div>
 
-Smeargle es un conjunto de utilidades y clases escrita en php según las especificaciones en formato json
+<div style="text-align: center;">
+  <img style="width: 350px;" src="logo.png" alt="imagen smeargle"/>
+</div>
+
+
+[Smeargle](https://www.youtube.com/watch?v=Y9DENCQMSgQ) es un conjunto de utilidades y clases escrita en php según las especificaciones en formato json
 de [SweetTicketDesign](https://github.com/puyu-pe/SweetTicketDesign/tree/develop)
 para el diseño de tickets que seran emitidas a ticketeras termicas
 con la ayuda de [PukaHTTP](https://github.com/puyu-pe/puka-http).
 
 ## Indice :card_index_dividers:
 
-1. [Comenzando](#comenzando-rocket)
-2. [Bloques de texto](#bloques-de-texto-heavy_check_mark)
-3. [Imagenes](#imagenes-heavy_check_mark)
-4. [Qr](#qr-heavy_check_mark)
+1. [¿Cómo funciona?](#funcionamiento-bookmark_tabs)
+2. [Bloques de diseño](#bloques-de-diseño-art)
+3. [Bloques de texto](#texto-con-smgverticallayout)
+4. [Estilos de texto](#estilos-con-smgstyle)
+5. [Ejemplos de bloques de texto](#mas-ejemplos)
+6. [Diseño de imágenes](#imágenes)
+7. [Agregar código QR](#código-qr)
 
 ## Comenzando :rocket:
 
-### Instalación :hammer_and_wrench:
+Agregar la libreria mediante composer.
 
 ```shell
 composer require puyu-pe/smeargle 
 ```
 
-## ¿Cómo funciona? :bookmark_tabs:
+## Funcionamiento :bookmark_tabs:
 
 Smeargle es un conjunto de clases y utilidades para la generación de un objecto json
 que representa un documento de impresión para [PukaHTTP](https://github.com/puyu-pe/puka-http).
