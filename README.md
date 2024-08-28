@@ -69,6 +69,12 @@ $config = SmgPrintObjectConfig::instance()
 $printObject = SmgPrintObject::build($config);
 ```
 
+> Nota: la propiedad blockWidth es importante por que representa el número de caracteres
+> máximo que puede entrar en una linea de un papel termico, el valor de esta propiedad se usa
+> para alinear correctamente los textos, imágenes o qr. Por defecto su valor es de 42, debido a que es
+> el mas común, pero para ticketeras de 72 mm se tiene que configurar 48, importante ir probando cual seria
+> el valor mas acertado.
+
 Opcionalmente se puede configurar algunos parametros para abrir la gaveta de dinero
 , por lo general esto no es necesario, ya que con sus valores por defecto es suficiente
 en la gran mayoria de casos.
@@ -255,26 +261,135 @@ send_data($jsonString); // ejm. send data to local server PukaHTTP
 
 ### Imágenes
 
-```injectablephp
+Para representar una imágen creamos una instancia de la clase SmgImageBlock mediante su método build()
+y pasando como argumento obligatorio la ruta absoluta local a la imagen en la pc donde esta instalado PukaHTTP.
+Si la imágen no existe en esa ruta, entonces la impresión del bloque de imagen sera ignorada,
+esto con el objetivo de no afectar a los demás bloques de diseño.
 
+```injectablephp
+$imageBlock = SmgImageBlock::build("/home/socamaru/Descargas/logos/gato.png");
+$printObject = SmgPrintObject::build()->block($imageBlock);
 ```
 
-### Qr
+Opcionalmente, se puede personalizar propiedades como el
+tipo de escalado de imagen , ancho , altura y alineación.
 
 ```injectablephp
-
+$imageBlock = SmgImageBlock::build("/home/socamaru/Descargas/logos/gato.png")
+    ->width(240)
+    ->height(400)
+    ->size(290)
+    ->center()
+    ->aling(SmgJustify::CENTER)
+    ->left()
+    ->aling(SmgJustify::LEFT)
+    ->right()
+    ->aling(SmgJustify::RIGHT)
+    ->scale(SmgScale::SMOOTH);
+    
+$printObject = SmgPrintObject::build()->block($imageBlock);
 ```
 
-## Bloques de texto :heavy_check_mark:
+Importante mencionar que que si la imagen no esta correctamente alineado,
+puede deberse a que el parametro blockWidth no tiene un valor acertado.
+El valor de blockWidth por defecto es de 42 caracteres por linea, para papeles termicos de 72 mm
+el tamaño deseado seria 48 esto se puede configurar en las propiedades de configuración del
+objeto de impresión.
 
-Con componentes de texto, se puede crear diseños para tablas o simples
-fragmentos de texto con la posibilidad de manipular la disposición de
-cada elemento mediante configuraciones de estilo.
+```injectablephp
+$imageBlock = SmgImageBlock::build("/home/socamaru/Descargas/logos/gato.png")->center();
+...
+$config = SmgPrintObjectConfig::instance()
+    ->blockWidth(48); // 48 para papeles termicos de 72 mm
+$printObject = SmgPrintObject::build($config) // !Importante pasar el objeto $config al metodo build del SmgPrintObject
+    ->block($imageBlock);
+```
 
-### Ejemplos
+### Código Qr
 
-- Prueba de impresión
+Para representar un código qr, se be instanciar un objeto SmgQrBlock mediante su método estatico build()
+y pasando como argumento obligatorio el stringQr (data).
 
-## Imagenes :heavy_check_mark:
+```injectablephp
+$qrBlock = SmgQrBlock::build("20450523381|01|F001|00000006|0|9.00|30/09/2019|6|sdfsdfsdf|");
+...
+$config = SmgPrintObjectConfig::instance()->blockWidth(48);
+$printObject = SmgPrintObject::build($config)->block($qrBlock);
+```
 
-## Qr :heavy_check_mark:
+Igual que las imágenes, el qr tambien se puede personalizar la alineación, el tamaño y su escalado.
+Debido a que el código qr debe ser cuadrado, se implementa un método size() para configurar su ancho y altura
+con el mismo valor.
+
+```injectablephp
+$qrBlock = SmgQrBlock::build("20450523381|01|F001|00000006|0|9.00|30/09/2019|6|sdfsdfsdf|")
+    ->center()
+    ->size(290)
+    ->scale(SmgScale::SMOOTH);
+...
+$config = SmgPrintObjectConfig::instance()->blockWidth(48);
+$printObject = SmgPrintObject::build($config)->block($qrBlock);
+```
+
+#### Configuración propiedades Qr
+
+Opcionalmente se puede configurar el nivel de corrección de error, y el tipo de QR.
+
+```injectablephp
+$qrConfig = SmgQrConfig::instance()->low()->native();
+$qrBlock = SmgQrBlock::build("20450523381|01|F001|00000006|0|9.00|30/09/2019|6|sdfsdfsdf|", $qrConfig)
+    ->center()
+    ->size(290)
+    ->scale(SmgScale::SMOOTH);
+$config = SmgPrintObjectConfig::instance()->blockWidth(48);
+$printObject = SmgPrintObject::build($config)->block($qrBlock);
+```
+
+Los niveles de corrección de error permitidos son low, medium, high y quartile.
+Por defecto, si no se configura, es quartile.
+
+```injectablephp
+$qrConfig = SmgQrConfig::instance()
+    ->low()
+    ->medium()
+    ->high()
+    ->quartile();
+...
+```
+
+##### ¿Qr Type?
+
+El tipo de qr es una propiedad especial que indica como debe ser tratado el Qr,
+existen dos formas, "native" y "img", "native" significa que el qr sera tratado de forma nativa
+por la impresora termica y "img" índica que el qr sera tratado previamente como imagen y luego
+imprimirse como imagen.
+
+###### ¿Cual escoger?
+
+Por defecto el tipo es "img", ya que asegura que se respetara la propiedad blockWidth para alinear
+correctamente el qr. Existen ticketeras que no son compatibles con los comandos de alineación,
+es por eso que SweetTicketDesign se encarga de tratar el qr como imagen para redimensionarlo y alinearlo y enviarlo
+en formato imagen a la impresora termica. Asegurando la correcta alineación del qr en cualquier ticketera (siempre y cuando
+la impresora termica soporte imágenes).
+
+```injectablephp
+$qrConfig = SmgQrConfig::instance()->likeImg() // valor por defecto
+...
+```
+
+Si se configura como "native", entonces sera la misma ticketera encargada de generar y alinear el qr.
+esto no asegura la correcta impresión del código qr en algunas ticketeras, ya que cada impresora termica interpreta el código
+qr de forma distinta. Esto quizas sea util si la impresora termica no soporta imágenes, pero puede que si soporte impresión de
+código qr de forma nativa.
+
+```injectablephp
+$qrConfig = SmgQrConfig::instance()->native()
+...
+```
+
+Otra diferencias son:
+
+- La propiedad "scale" solo funciona si el Qr Type es "img".
+- La propiedad "size" varia de 1 a 16 si el Qr Type es "native", siendo 16 el tamaño maximo posible.
+- En cambio si es "img", la propiedad "size", no tiene limite, siendo 16 un tamaño muy pequeño y 290 un
+  tamaño aceptable (similar a size=16 en nativo.).
