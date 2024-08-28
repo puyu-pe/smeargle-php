@@ -15,12 +15,16 @@ class SmgVerticalLayout implements SmgBlock
         $this->textBlock = SmgTextBlock::build($config);
     }
 
+    public static function build(?SmgTextBlockConfig $config = null): SmgVerticalLayout
+    {
+        return new SmgVerticalLayout($config);
+    }
+
     public function line(?string $char = null, ?SmgStyle $style = null): self
     {
         $this->textBlock->line($char, $style);
         return $this;
     }
-
 
     /**
      * @param SmgRow[] $rows

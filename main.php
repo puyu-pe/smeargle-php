@@ -20,42 +20,18 @@ use \PuyuPe\Smeargle\blocks\qr\SmgQrConfig;
 use \PuyuPe\Smeargle\blocks\style\Smg;
 use \PuyuPe\Smeargle\blocks\text\SmgVerticalLayout;
 
-$products = [
-    ["name" => "item1", "units" => "3", "price" => "3.50"],
-    ["name" => "item2", "units" => "5", "price" => "6.20"],
-    ["name" => "item3", "units" => "1", "price" => "1.20"],
-    ["name" => "item4", "units" => "2", "price" => "9.30"],
-    ["name" => "item5", "units" => "1", "price" => "4.30"],
-    ["name" => "item6", "units" => "1", "price" => "5.70"],
-];
+SmgDrawer::builder()->pin(SmgDrawerPin::_5)->t2(120)->t2(240);
 
-$header = new SmgRow(["header1", "header2", "header3"], Smg::bold());
+$config = SmgPrintObjectConfig::instance()
+    ->blockWidth(48)
+    ->normalize()
+    ->info("key", "value")
+    ->cut(SmgCutProperty::builder()->mode(SmgCutMode::FULL))
+    ->openDrawer();
 
-$body = array_map(function ($product) {
-    return new SmgRow([$product["name"], $product["units"], $product["price"]]);
-}, $products);
+$layout = SmgVerticalLayout::build()->toCenter("al centro", Smg::bold());
+$style = SmgStyle::builder()->bold();
 
-$footer = new SmgRow();
-$footer->add("total:", Smg::bold()->right()->span(4));
-$footer->add("450.47");
+$printObject = SmgPrintObject::build($config)->block($textBlock);
 
-$tablePrintConfig = SmgTextBlockConfig::instance()
-    ->separator("|")
-    ->styleForColumn(0, Smg::left())
-    ->styleForColumn(1, Smg::center())
-    ->styleForColumn(2, Smg::right());
-
-$table = new SmgVerticalLayout($tablePrintConfig);
-$table
-    ->title("Tabla de ejemplo")
-    ->line("*")
-    ->row($header)
-    ->line()
-    ->rows($body)
-    ->line()
-    ->row($footer);
-
-$printObjectConfig = SmgPrintObjectConfig::instance()->blockWidth(48);
-$jsonString = SmgPrintObject::build($printObjectConfig)->block($table)->toJson();
-
-echo json_encode(json_decode($jsonString, true), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+echo json_encode(json_decode($printObject->toJson(), true), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
