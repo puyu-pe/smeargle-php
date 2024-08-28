@@ -1,4 +1,4 @@
-<div style="text-align: center;">
+<div align="center" width="100%">
 
 ```textmate
    ▄▄▄▄▄   █▀▄▀█ ▄███▄   ██   █▄▄▄▄   ▄▀  █     ▄███▄   
@@ -9,14 +9,16 @@
              ▀             █   ▀                        
                           ▀                             
 ```
+
 </div>
 
-<div style="text-align: center;">
-  <img style="width: 350px;" src="logo.png" alt="imagen smeargle"/>
+<div align="center" width="100%">
+  <img width="30%" src="logo.png" alt="imagen smeargle"/>
 </div>
 
 
-[Smeargle](https://www.youtube.com/watch?v=Y9DENCQMSgQ) es un conjunto de utilidades y clases escrita en php según las especificaciones en formato json
+[Smeargle](https://www.youtube.com/watch?v=Y9DENCQMSgQ) es un conjunto de utilidades y clases escrita en php según las especificaciones en formato
+json
 de [SweetTicketDesign](https://github.com/puyu-pe/SweetTicketDesign/tree/develop)
 para el diseño de tickets que seran emitidas a ticketeras termicas
 con la ayuda de [PukaHTTP](https://github.com/puyu-pe/puka-http).
