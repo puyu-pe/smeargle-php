@@ -1,4 +1,6 @@
 <div align="center" width="100%">
+  <img width="30%" src="logo.png" alt="imagen smeargle"/>
+</div>
 
 ```textmate
    ▄▄▄▄▄   █▀▄▀█ ▄███▄   ██   █▄▄▄▄   ▄▀  █     ▄███▄   
@@ -9,13 +11,6 @@
              ▀             █   ▀                        
                           ▀                             
 ```
-
-</div>
-
-<div align="center" width="100%">
-  <img width="30%" src="logo.png" alt="imagen smeargle"/>
-</div>
-
 
 [Smeargle](https://www.youtube.com/watch?v=Y9DENCQMSgQ) es un conjunto de utilidades y clases escrita en php según las especificaciones en formato
 json
