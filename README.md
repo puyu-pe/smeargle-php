@@ -13,8 +13,7 @@
 ```
 
 [Smeargle](https://www.youtube.com/watch?v=Y9DENCQMSgQ) es un conjunto de utilidades y clases escrita en php según las especificaciones en formato
-json
-de [SweetTicketDesign](https://github.com/puyu-pe/SweetTicketDesign/tree/develop)
+json de [SweetTicketDesign](https://github.com/puyu-pe/SweetTicketDesign/tree/develop)
 para el diseño de tickets que seran emitidas a ticketeras termicas
 con la ayuda de [PukaHTTP](https://github.com/puyu-pe/puka-http).
 
@@ -33,7 +32,7 @@ con la ayuda de [PukaHTTP](https://github.com/puyu-pe/puka-http).
 Agregar la libreria mediante composer.
 
 ```shell
-composer require puyu-pe/smeargle 
+composer require puyu-pe/smeargle-php
 ```
 
 ## Funcionamiento :bookmark_tabs:
