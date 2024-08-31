@@ -3,6 +3,8 @@
 namespace PuyuPe\Smeargle;
 
 use PuyuPe\Smeargle\blocks\SmgBlock;
+use PuyuPe\Smeargle\opendrawer\SmgDrawer;
+use PuyuPe\Smeargle\opendrawer\SmgDrawerPin;
 
 class SmgPrintObject
 {
@@ -32,6 +34,21 @@ class SmgPrintObject
         $blockJson = $block->toJson();
         if ($blockJson != null) {
             $this->data[] = json_decode($blockJson, true);
+        }
+        return $this;
+    }
+
+    public function openDrawer(SmgDrawer|bool $openDrawer = true): self
+    {
+        if (is_bool($openDrawer)) {
+            if ($openDrawer) {
+                $drawer = SmgDrawer::builder()->pin(SmgDrawerPin::_2);
+                $this->object["openDrawer"] = json_decode($drawer->toJson(), true);
+            } else {
+                unset($this->object["openDrawer"]);
+            }
+        } else {
+            $this->object["openDrawer"] = json_decode($openDrawer->toJson(), true);
         }
         return $this;
     }

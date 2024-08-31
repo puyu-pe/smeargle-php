@@ -71,7 +71,6 @@ $config = SmgPrintObjectConfig::instance()
     ->info("key", "value") // agrega metadatos en formato clave valor
     ->info("printer", $printer) 
     ->info("time", 2) 
-    ->openDrawer() // Habilita abrir gaveta de dinero al finalizar el trabajo de impresión;
     
 $printObject = SmgPrintObject::build($config);
 ```
@@ -91,11 +90,7 @@ $customOpenDrawer SmgDrawer::builder()
     ->pin(SmgDrawerPin::_2)
     ->t2(120)
     ->t2(240);
-$config = SmgPrintObjectConfig::instance()
-    ...
-    ->openDrawer($customOpenDrawer);
-    ...
-$printObject = SmgPrintObject::build($config);
+$printObject = SmgPrintObject::build($config)->openDrawer();
 ```
 
 Siempre, al finalizar el trabajo de impresión se realiza un corte automático con
