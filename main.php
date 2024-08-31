@@ -19,15 +19,3 @@ use \PuyuPe\Smeargle\blocks\qr\SmgQrBlock;
 use \PuyuPe\Smeargle\blocks\qr\SmgQrConfig;
 use \PuyuPe\Smeargle\blocks\style\Smg;
 use \PuyuPe\Smeargle\blocks\text\SmgVerticalLayout;
-
-$qrConfig = SmgQrConfig::instance()->low()->native();
-
-$qrBlock = SmgQrBlock::build("20450523381|01|F001|00000006|0|9.00|30/09/2019|6|sdfsdfsdf|", $qrConfig)
-    ->center()
-    ->size(290)
-    ->scale(SmgScale::SMOOTH);
-$config = SmgPrintObjectConfig::instance()->blockWidth(48);
-$printObject = SmgPrintObject::build($config)->block($qrBlock);
-
-
-echo json_encode(json_decode($printObject->toJson(), true), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
