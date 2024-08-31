@@ -61,13 +61,6 @@ class SmgPrintObjectConfig
         return $this;
     }
 
-    public function openDrawer(?SmgDrawer $openDrawer = null): self
-    {
-        $drawer = $openDrawer ?? SmgDrawer::builder()->pin(SmgDrawerPin::_2);
-        $this->object["openDrawer"] = json_decode($drawer->toJson(), true);
-        return $this;
-    }
-
     public function toJson(): ?string
     {
         if (!$this->properties->isEmpty()) {
