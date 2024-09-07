@@ -2,25 +2,51 @@
 
 namespace PuyuPe\Smeargle\blocks\text;
 
+use PuyuPe\Smeargle\blocks\style\SmgStyle;
+
 class SmgCell
 {
-    private string|int $value;
-    private ?string $class;
+    private array $object;
+    private SmgStyle $style;
 
-    public function __construct(string|int $value, ?string $class = null)
+    public function __construct(string $value, null|string|SmgStyle $style = null)
     {
-        $this->value = $value;
-        $this->class = $class;
+        $this->object = [];
+        $this->style = SmgStyle::builder();
+        $this->text($value);
+        $this->style($style);
+    }
+
+    public function text(string $value): self
+    {
+        $this->object["text"] = $value;
+        return $this;
+    }
+
+    public function style(string|SmgStyle|null $style): self
+    {
+        if ($style != null) {
+            if (!is_string($style)) {
+                $this->object["class"] = $style->uniqueClassName();
+                $this->style = SmgStyle::copy($style);
+            } else {
+                $this->object["class"] = $style;
+            }
+        }
+        return $this;
+    }
+
+    public function getStyle(): SmgStyle
+    {
+        return SmgStyle::copy($this->style);
     }
 
     public function toJson(): ?string
     {
-        $cell = [];
-        $cell["text"] = $this->value;
-        if ($this->class != null) {
-            $cell["class"] = $this->class;
+        if (count($this->object) == 0 ) {
+            return null;
         }
-        return json_encode($cell, JSON_UNESCAPED_UNICODE);
+        return json_encode($this->object, JSON_UNESCAPED_UNICODE);
     }
 
 }
