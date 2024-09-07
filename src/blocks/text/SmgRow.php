@@ -14,27 +14,27 @@ class SmgRow
     /**
      * @param string[] $row
      */
-    public function __construct(array $row = [], SmgStyle|string|null $styleOrClass = null)
+    public function __construct(array $row = [], SmgStyle|string|null $style = null)
     {
         $this->object = [];
         $this->styles = new SmgMapStyles();
         for ($i = 0; $i < count($row); ++$i) {
-            $this->add($row[$i], $styleOrClass);
+            $this->add($row[$i], $style);
         }
     }
 
-    public function add(string $text, SmgStyle|string|null $styleOrClass = null): self
+    public function add(string $text, SmgStyle|string|null $style = null): self
     {
         $cell = new SmgCell($text);
-        if ($styleOrClass != null) {
-            if (!is_string($styleOrClass)) {
-                if (!$styleOrClass->isEmpty()) {
-                    $class = $styleOrClass->uniqueClassName();
-                    $this->styles->setIfNotExists($class, $styleOrClass);
+        if ($style != null) {
+            if (!is_string($style)) {
+                if (!$style->isEmpty()) {
+                    $class = $style->uniqueClassName();
+                    $this->styles->setIfNotExists($class, $style);
                     $cell = new SmgCell($text, $class);
                 }
             } else {
-                $cell = new SmgCell($text, $styleOrClass); // $style like className
+                $cell = new SmgCell($text, $style); // $style like className
             }
         }
         $this->object[] = json_decode($cell->toJson(), true);
