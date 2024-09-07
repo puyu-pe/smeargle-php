@@ -58,40 +58,40 @@ class SmgStyle
         return json_encode($this->object, JSON_UNESCAPED_UNICODE);
     }
 
-    public function fontWidth(int $fontWidth): self
+    public function fontWidth(int $charxels): self
     {
-        $this->object["fontWidth"] = min(max($fontWidth, 1), 7);
+        $this->object["fontWidth"] = min(max($charxels, 1), 7);
         return $this;
     }
 
-    public function fontHeight(int $fontHeight): self
+    public function fontHeight(int $charxels): self
     {
-        $this->object["fontHeight"] = min(max($fontHeight, 1), 7);
+        $this->object["fontHeight"] = min(max($charxels, 1), 7);
         return $this;
     }
 
-    public function fontSize(int $fontSize): self
+    public function fontSize(int $charxels): self
     {
-        $this->fontWidth($fontSize);
-        $this->fontHeight($fontSize);
+        $this->fontWidth($charxels);
+        $this->fontHeight($charxels);
         return $this;
     }
 
-    public function bold(bool $bold = true): self
+    public function bold(bool $value = true): self
     {
-        $this->object["bold"] = $bold;
+        $this->object["bold"] = $value;
         return $this;
     }
 
-    public function normalize(bool $normalize = true): self
+    public function normalize(bool $value = true): self
     {
-        $this->object["normalize"] = $normalize;
+        $this->object["normalize"] = $value;
         return $this;
     }
 
-    public function bgInverted(bool $bgInverted = true): self
+    public function bgInverted(bool $value = true): self
     {
-        $this->object["bgInverted"] = $bgInverted;
+        $this->object["bgInverted"] = $value;
         return $this;
     }
 
@@ -124,32 +124,45 @@ class SmgStyle
         return $this->align(SmgJustify::RIGHT);
     }
 
-    public function span(int $span): self
+    public function charxels(int $value): self
     {
-        $this->object["span"] = max($span, 0);
+        $this->object["charxels"] = max($value, 0);
         return $this;
     }
 
-    public function maxSpan(): self
+    public function auto(): self
     {
-        return $this->span(1000);
+        return $this->charxels(0);
     }
 
-    public function scale(SmgScale $scale): self
+    public function scale(SmgScale $value): self
     {
-        $this->object["scale"] = $scale->getValue();
+        $this->object["scale"] = $value->getValue();
         return $this;
     }
 
-    public function width(int $width): self
+    public function width(int $value): self
     {
-        $this->object["width"] = max($width, 0);
+        $this->object["width"] = max($value, 0);
         return $this;
     }
 
-    public function height(int $height): self
+    public function height(int $value): self
     {
-        $this->object["height"] = max($height, 0);
+        $this->object["height"] = max($value, 0);
+        return $this;
+    }
+
+    public function size(int $value): self
+    {
+        $this->width($value);
+        $this->height($value);
+        return $this;
+    }
+
+    public function charCode(string $value): self
+    {
+        $this->object["charCode"] = $value;
         return $this;
     }
 }

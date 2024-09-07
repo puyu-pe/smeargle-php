@@ -84,7 +84,7 @@ class SmgVerticalLayout implements SmgBlock
         if ($secondaryStyle != null && !$secondaryStyle->isEmpty()) {
             $primaryStyle = SmgStyle::copy($secondaryStyle)->merge($primaryStyle);
         }
-        $primaryStyle->maxSpan();
+        $primaryStyle->auto();
         $class = $primaryStyle->uniqueClassName();
         $this->textBlock->createStyle($class, $primaryStyle);
         $this->textBlock->text($text, $class);

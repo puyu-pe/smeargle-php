@@ -23,7 +23,7 @@ class SmgTextBlock implements SmgBlock
     {
         if ($char == null) $char = "-";
         if ($style == null) $style = SmgStyle::builder()->fontWidth(1);
-        $style = SmgStyle::copy($style)->pad($char)->span(1000);
+        $style = SmgStyle::copy($style)->pad($char)->charxels(1000);
         $class = '$line_' . $style->uniqueClassName();
         $this->createStyle($class, $style);
         $this->rows[] = json_decode((new SmgCell("", $class))->toJson(), true);

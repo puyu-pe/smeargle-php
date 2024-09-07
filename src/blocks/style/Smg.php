@@ -56,12 +56,12 @@ class Smg
 
     public static function span(int $span): SmgStyle
     {
-        return SmgStyle::builder()->span($span);
+        return SmgStyle::builder()->charxels($span);
     }
 
     public static function maxSpan(): SmgStyle
     {
-        return SmgStyle::builder()->maxSpan();
+        return SmgStyle::builder()->auto();
     }
 
     public static function leftBold(): SmgStyle
@@ -81,32 +81,32 @@ class Smg
 
     public static function centerMaxSpan(): SmgStyle
     {
-        return SmgStyle::builder()->center()->maxSpan();
+        return SmgStyle::builder()->center()->auto();
     }
 
     public static function leftMaxSpan(): SmgStyle
     {
-        return SmgStyle::builder()->left()->maxSpan();
+        return SmgStyle::builder()->left()->auto();
     }
 
     public static function rightMaxSpan(): SmgStyle
     {
-        return SmgStyle::builder()->right()->maxSpan();
+        return SmgStyle::builder()->right()->auto();
     }
 
     public static function leftBoldMaxSpan(): SmgStyle
     {
-        return SmgStyle::builder()->left()->bold()->maxSpan();
+        return SmgStyle::builder()->left()->bold()->auto();
     }
 
     public static function rightBoldMaxSpan(): SmgStyle
     {
-        return SmgStyle::builder()->right()->bold()->maxSpan();
+        return SmgStyle::builder()->right()->bold()->auto();
     }
 
     public static function centerBoldMaxSpan(): SmgStyle
     {
-        return SmgStyle::builder()->center()->bold()->maxSpan();
+        return SmgStyle::builder()->center()->bold()->auto();
     }
 
     public static function ifElse(bool $flag, SmgStyle $true, SmgStyle $false): SmgStyle
@@ -121,11 +121,11 @@ class Smg
 
     public static function title(): SmgStyle
     {
-        return SmgStyle::builder()->center()->bold()->fontSize(2)->maxSpan();
+        return SmgStyle::builder()->center()->bold()->fontSize(2)->auto();
     }
 
     public static function subtitle(): SmgStyle
     {
-        return SmgStyle::builder()->left()->bold()->maxSpan();
+        return SmgStyle::builder()->left()->bold()->auto();
     }
 }
