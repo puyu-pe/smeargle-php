@@ -2,8 +2,6 @@
 
 namespace PuyuPe\Smeargle\blocks\text;
 
-use PuyuPe\Smeargle\blocks\style\SmgStyle;
-
 class SmgCell
 {
     private array $object;
@@ -15,6 +13,11 @@ class SmgCell
         if (trim($class) !== "") {
             $this->object["class"] = $text;
         }
+    }
+
+    public static function new(string $text, ?string $class = null): SmgCell
+    {
+        return new SmgCell($text, $class);
     }
 
     public function toJson(): ?string

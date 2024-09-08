@@ -2,55 +2,33 @@
 
 namespace PuyuPe\Smeargle\blocks\text;
 
-use PuyuPe\Smeargle\blocks\style\SmgMapStyles;
-use PuyuPe\Smeargle\blocks\style\SmgStyle;
-
 class SmgRow
 {
-
-    private array $object;
-    private SmgMapStyles $styles;
+    private array $array;
 
     /**
      * @param string[] $row
      */
-    public function __construct(array $row = [], SmgStyle|string|null $style = null)
+    public function __construct(string $class, array $row = [])
     {
-        $this->object = [];
-        $this->styles = new SmgMapStyles();
+        $this->array = [];
         for ($i = 0; $i < count($row); ++$i) {
-            $this->add($row[$i], $style);
+            $this->add($row[$i], $class);
         }
     }
 
-    public function add(string $text, SmgStyle|string|null $style = null): self
+    public function add(string $text, ?string $class = null): self
     {
-        $cell = new SmgCell($text);
-        if ($style != null) {
-            if (!is_string($style)) {
-                if (!$style->isEmpty()) {
-                    $class = $style->uniqueClassName();
-                    $this->styles->setIfNotExists($class, $style);
-                    $cell = new SmgCell($text, $class);
-                }
-            } else {
-                $cell = new SmgCell($text, $style); // $style like className
-            }
-        }
-        $this->object[] = json_decode($cell->toJson(), true);
+        $cell = new SmgCell($text, $class);
+        $this->array[] = json_decode($cell->toJson(), true);
         return $this;
-    }
-
-    public function getStyles(): SmgMapStyles
-    {
-        return $this->styles;
     }
 
     public function toJson(): ?string
     {
-        if (count($this->object) == 0) {
+        if (count($this->array) == 0) {
             return null;
         }
-        return json_encode($this->object, JSON_UNESCAPED_UNICODE);
+        return json_encode($this->array, JSON_UNESCAPED_UNICODE);
     }
 }

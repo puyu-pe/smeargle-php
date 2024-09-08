@@ -3,110 +3,50 @@
 namespace PuyuPe\Smeargle\blocks\text;
 
 use PuyuPe\Smeargle\blocks\SmgBlock;
-use PuyuPe\Smeargle\blocks\style\SmgMapStyles;
-use PuyuPe\Smeargle\blocks\style\SmgStyle;
 
 class SmgTextBlock implements SmgBlock
 {
     protected array $object;
     protected array $rows;
-    protected SmgMapStyles $styles;
 
-    private function __construct(array $object, SmgMapStyles $styles)
+    private function __construct(?string $separator = null)
     {
-        $this->object = $object;
-        $this->styles = $styles;
+        $this->object = [];
         $this->rows = [];
+        if ($separator != null && trim($separator) !== "") {
+            $this->object["separator"] = $separator;
+        }
     }
 
-    public function line(?string $char = null, ?SmgStyle $style = null): self
+    public function addText(string $text): self
     {
-        if ($char == null) $char = "-";
-        if ($style == null) $style = SmgStyle::builder()->fontWidth(1);
-        $style = SmgStyle::copy($style)->pad($char)->charxels(1000);
-        $class = '$line_' . $style->uniqueClassName();
-        $this->createStyle($class, $style);
-        $this->rows[] = json_decode((new SmgCell("", $class))->toJson(), true);
+        $this->rows[] = $text;
         return $this;
     }
 
     /**
-     * @param string|int[] $texts
+     * @param SmgCell[] $cells
+     * @return $this
      */
-    public function texts(array $texts, SmgStyle|string|null $styleOrClass = null): self
+    public function addRow(array $cells): self
     {
-        $class = is_string($styleOrClass) ? $styleOrClass : '$text_' . $styleOrClass->uniqueClassName();
-        if ($styleOrClass != null && !is_string($styleOrClass)) {
-            $this->styles->set($class, $styleOrClass);
+        $row = [];
+        foreach ($cells as $cell) {
+            $row[] = json_decode($cell->toJson(), true);
         }
-        for ($i = 0; $i < count($texts); ++$i) {
-            if (is_string($texts[$i]) || is_int($texts[$i])) {
-                if ($styleOrClass != null) {
-                    $this->rows[] = json_decode((new SmgCell($texts[$i], $class))->toJson(), true);
-                } else {
-                    $this->rows[] = $texts[$i];
-                }
-            }
-        }
+        $this->rows[] = $row;
         return $this;
     }
 
-    public function text(string|int $text, SmgStyle|string|null $styleOrClass = null): self
+    public function addCell(SmgCell $cell): self
     {
-        return $this->texts([$text], $styleOrClass);
-    }
-
-    public function row(SmgRow ...$rows): self
-    {
-        return $this->rows($rows);
-    }
-
-    /**
-     * @param SmgRow[] $rows
-     */
-    public function rows(array $rows): self
-    {
-        for ($i = 0; $i < count($rows); ++$i) {
-            $this->rows[] = json_decode($rows[$i]->toJson(), true);
-            $this->styles->merge($rows[$i]->getStyles());
-        }
+        $this->rows[] = json_decode($cell->toJson(), true);
         return $this;
     }
 
-    public function hasStyle(string $class): bool
+    public static function build(?string $separator = null): SmgTextBlock
     {
-        return $this->styles->has($class);
-    }
-
-    public function addStyle(string $class, SmgStyle $style): self
-    {
-        if ($this->styles->has($class)) {
-            $mergeStyle = $this->styles->get($class)->merge($style);
-            $this->styles->set($class, $mergeStyle);
-        } else {
-            $this->styles->set($class, $style);
-        }
-        return $this;
-    }
-
-    public function createStyle(string $class, SmgStyle $style): self
-    {
-        $this->styles->setIfNotExists($class, $style);
-        return $this;
-    }
-
-    public static function build(?SmgTextBlockConfig $config = null): SmgTextBlock
-    {
-        $object = [];
-        $styles = new SmgMapStyles();
-        if ($config != null) {
-            $configJson = $config->toJson();
-            if ($configJson != null) {
-                $object = json_decode($configJson, true);
-            }
-            $styles = $config->getStyles();
-        }
-        return new SmgTextBlock($object, $styles);
+        return new SmgTextBlock($separator);
     }
 
     public function toJson(): ?string
@@ -114,12 +54,10 @@ class SmgTextBlock implements SmgBlock
         if (count($this->rows) > 0) {
             $this->object["rows"] = $this->rows;
         }
-        if (!$this->styles->isEmpty()) {
-            $this->object["styles"] = json_decode($this->styles->toJson(), true);
-        }
         if (count($this->object) == 0) {
             return null;
         }
         return json_encode($this->object, JSON_UNESCAPED_UNICODE);
     }
+
 }
