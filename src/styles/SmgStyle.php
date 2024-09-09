@@ -1,6 +1,6 @@
 <?php
 
-namespace PuyuPe\Smeargle\blocks\style;
+namespace PuyuPe\Smeargle\styles;
 
 class SmgStyle
 {
@@ -13,16 +13,16 @@ class SmgStyle
 
     public function reset(array $object = []): self
     {
-        $this->object = [];
+        $this->object = $object;
         return $this;
     }
 
     public function uniqueClassName(): string
     {
         ksort($this->object);
-        $className = "style";
+        $className = "_";
         foreach ($this->object as $key => $value) {
-            $className = $className . "_" . $key . "=" . $value;
+            $className .= $key . "=" . $value . "_";
         }
         return $className;
     }
@@ -37,6 +37,24 @@ class SmgStyle
         $newStyle = new SmgStyle();
         $newStyle->object = json_decode($style->toJson(), true);
         return $newStyle;
+    }
+
+    public function if(bool $condition, SmgStyle $style): self
+    {
+        if ($condition) {
+            $this->merge($style);
+        }
+        return $this;
+    }
+
+    public function ifElse(bool $condition, SmgStyle $trueStyle, SmgStyle $falseStyle): self
+    {
+        if ($condition) {
+            $this->merge($trueStyle);
+        } else {
+            $this->merge($falseStyle);
+        }
+        return $this;
     }
 
     public function merge(SmgStyle $parentStyle): self
@@ -58,40 +76,40 @@ class SmgStyle
         return json_encode($this->object, JSON_UNESCAPED_UNICODE);
     }
 
-    public function fontWidth(int $fontWidth): self
+    public function fontWidth(int $value): self
     {
-        $this->object["fontWidth"] = min(max($fontWidth, 1), 7);
+        $this->object["fontWidth"] = min(max($value, 1), 7);
         return $this;
     }
 
-    public function fontHeight(int $fontHeight): self
+    public function fontHeight(int $value): self
     {
-        $this->object["fontHeight"] = min(max($fontHeight, 1), 7);
+        $this->object["fontHeight"] = min(max($value, 1), 7);
         return $this;
     }
 
-    public function fontSize(int $fontSize): self
+    public function fontSize(int $value): self
     {
-        $this->fontWidth($fontSize);
-        $this->fontHeight($fontSize);
+        $this->fontWidth($value);
+        $this->fontHeight($value);
         return $this;
     }
 
-    public function bold(bool $bold = true): self
+    public function bold(bool $value = true): self
     {
-        $this->object["bold"] = $bold;
+        $this->object["bold"] = $value;
         return $this;
     }
 
-    public function normalize(bool $normalize = true): self
+    public function normalize(bool $value = true): self
     {
-        $this->object["normalize"] = $normalize;
+        $this->object["normalize"] = $value;
         return $this;
     }
 
-    public function bgInverted(bool $bgInverted = true): self
+    public function bgInverted(bool $value = true): self
     {
-        $this->object["bgInverted"] = $bgInverted;
+        $this->object["bgInverted"] = $value;
         return $this;
     }
 
@@ -124,32 +142,40 @@ class SmgStyle
         return $this->align(SmgJustify::RIGHT);
     }
 
-    public function span(int $span): self
+    public function charxels(int $value): self
     {
-        $this->object["span"] = max($span, 0);
+        $this->object["charxels"] = max($value, 0);
         return $this;
     }
 
-    public function maxSpan(): self
+    public function scale(SmgScale $value): self
     {
-        return $this->span(1000);
-    }
-
-    public function scale(SmgScale $scale): self
-    {
-        $this->object["scale"] = $scale->getValue();
+        $this->object["scale"] = $value->getValue();
         return $this;
     }
 
-    public function width(int $width): self
+    public function width(int $value): self
     {
-        $this->object["width"] = max($width, 0);
+        $this->object["width"] = max($value, 0);
         return $this;
     }
 
-    public function height(int $height): self
+    public function height(int $value): self
     {
-        $this->object["height"] = max($height, 0);
+        $this->object["height"] = max($value, 0);
+        return $this;
+    }
+
+    public function size(int $value): self
+    {
+        $this->width($value);
+        $this->height($value);
+        return $this;
+    }
+
+    public function charCode(string $value): self
+    {
+        $this->object["charCode"] = $value;
         return $this;
     }
 }

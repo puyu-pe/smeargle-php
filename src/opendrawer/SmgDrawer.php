@@ -33,11 +33,8 @@ class SmgDrawer
         return $this;
     }
 
-    public function toJson(): ?string
+    public function toJson(): string
     {
-        if (count($this->object) == 0) {
-            return null;
-        }
         return json_encode($this->object, JSON_UNESCAPED_UNICODE);
     }
 

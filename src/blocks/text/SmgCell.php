@@ -4,23 +4,28 @@ namespace PuyuPe\Smeargle\blocks\text;
 
 class SmgCell
 {
-    private string|int $value;
-    private ?string $class;
+    private array $object;
 
-    public function __construct(string|int $value, ?string $class = null)
+    public function __construct(string $text, ?string $class = null)
     {
-        $this->value = $value;
-        $this->class = $class;
+        $this->object = [];
+        $this->object["text"] = $text;
+        if (trim($class) !== "") {
+            $this->object["class"] = $text;
+        }
+    }
+
+    public static function new(string $text, ?string $class = null): SmgCell
+    {
+        return new SmgCell($text, $class);
     }
 
     public function toJson(): ?string
     {
-        $cell = [];
-        $cell["text"] = $this->value;
-        if ($this->class != null) {
-            $cell["class"] = $this->class;
+        if (count($this->object) == 0) {
+            return null;
         }
-        return json_encode($cell, JSON_UNESCAPED_UNICODE);
+        return json_encode($this->object, JSON_UNESCAPED_UNICODE);
     }
 
 }
