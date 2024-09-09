@@ -33,7 +33,7 @@ class SmgPrintObjectConfig
 
     public function blockWidth(int $blockWidth): self
     {
-        $this->properties->blockWidth($blockWidth);
+        $this->properties->setBlockWidth($blockWidth);
         return $this;
     }
 
@@ -51,7 +51,7 @@ class SmgPrintObjectConfig
 
     public function cut(SmgCutProperty $cutProperty): self
     {
-        $this->properties->cut($cutProperty);
+        $this->properties->setCut($cutProperty);
         return $this;
     }
 
