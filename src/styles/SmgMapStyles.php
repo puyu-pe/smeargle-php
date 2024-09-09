@@ -54,34 +54,15 @@ class SmgMapStyles
         return $this;
     }
 
-    public static function copy(SmgMapStyles $styles): SmgMapStyles
-    {
-        $newStyles = new SmgMapStyles();
-        $copy = $styles->toJson();
-        if ($copy != null) {
-            $newStyles->object = json_decode($copy, true);
-        }
-        return $newStyles;
-    }
-
-    public function merge(SmgMapStyles $otherStyles): self
-    {
-        $this->object = array_merge($this->object, $otherStyles->object);
-        return $this;
-    }
-
     public function isEmpty(): bool
     {
         return count($this->object) == 0 && $this->globalStyle->isEmpty();
     }
 
-    public function toJson(): ?string
+    public function toJson(): string
     {
         if (!$this->globalStyle->isEmpty()) {
             $this->set("*", $this->globalStyle);
-        }
-        if ($this->isEmpty()) {
-            return null;
         }
         return json_encode($this->object, JSON_UNESCAPED_UNICODE);
     }
