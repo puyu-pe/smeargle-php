@@ -11,7 +11,7 @@ class SmgTextBlock implements SmgBlock
 
     private function __construct(?string $separator = null)
     {
-        $this->object = [];
+        $this->object = ["type" => "text"];
         $this->rows = [];
         if ($separator != null && trim($separator) !== "") {
             $this->object["separator"] = $separator;

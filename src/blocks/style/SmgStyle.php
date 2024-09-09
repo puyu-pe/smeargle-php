@@ -39,6 +39,24 @@ class SmgStyle
         return $newStyle;
     }
 
+    public function if(bool $condition, SmgStyle $style): self
+    {
+        if ($condition) {
+            $this->merge($style);
+        }
+        return $this;
+    }
+
+    public function ifElse(bool $condition, SmgStyle $trueStyle, SmgStyle $falseStyle): self
+    {
+        if ($condition) {
+            $this->merge($trueStyle);
+        } else {
+            $this->merge($falseStyle);
+        }
+        return $this;
+    }
+
     public function merge(SmgStyle $parentStyle): self
     {
         $this->object = array_merge($this->object, $parentStyle->object);
@@ -58,22 +76,22 @@ class SmgStyle
         return json_encode($this->object, JSON_UNESCAPED_UNICODE);
     }
 
-    public function fontWidth(int $charxels): self
+    public function fontWidth(int $value): self
     {
-        $this->object["fontWidth"] = min(max($charxels, 1), 7);
+        $this->object["fontWidth"] = min(max($value, 1), 7);
         return $this;
     }
 
-    public function fontHeight(int $charxels): self
+    public function fontHeight(int $value): self
     {
-        $this->object["fontHeight"] = min(max($charxels, 1), 7);
+        $this->object["fontHeight"] = min(max($value, 1), 7);
         return $this;
     }
 
-    public function fontSize(int $charxels): self
+    public function fontSize(int $value): self
     {
-        $this->fontWidth($charxels);
-        $this->fontHeight($charxels);
+        $this->fontWidth($value);
+        $this->fontHeight($value);
         return $this;
     }
 
@@ -128,11 +146,6 @@ class SmgStyle
     {
         $this->object["charxels"] = max($value, 0);
         return $this;
-    }
-
-    public function auto(): self
-    {
-        return $this->charxels(0);
     }
 
     public function scale(SmgScale $value): self
