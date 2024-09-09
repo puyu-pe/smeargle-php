@@ -3,90 +3,40 @@
 namespace PuyuPe\Smeargle\blocks\img;
 
 use PuyuPe\Smeargle\blocks\SmgBlock;
-use PuyuPe\Smeargle\styles\SmgJustify;
-use PuyuPe\Smeargle\styles\SmgMapStyles;
-use PuyuPe\Smeargle\styles\SmgScale;
-use PuyuPe\Smeargle\styles\SmgStyle;
 
 class SmgImageBlock implements SmgBlock
 {
     private array $object;
-    private SmgStyle $style;
+    private array $imgObject;
 
     private function __construct()
     {
-        $this->object = [];
-        $this->style = SmgStyle::builder();
+        $this->object = ["type" => "img"];
+        $this->imgObject = [];
     }
 
-    public static function build(string $imgPath): SmgImageBlock
+    public static function build(): SmgImageBlock
     {
-        $imageBlock = new SmgImageBlock();
-        $imageBlock->object["imgPath"] = $imgPath;
-        return $imageBlock;
+        return new SmgImageBlock();
     }
 
-    public function width(int $width): self
+    public function setPath(string $localPath): self
     {
-        $this->style->width($width);
+        $this->imgObject["path"] = $localPath;
         return $this;
     }
 
-    public function height(int $height): self
+    public function setClass(string $class): self
     {
-        $this->style->height($height);
+        $this->imgObject["class"] = $class;
         return $this;
     }
 
-    public function size(int $size): self
+    public function toJson(): string
     {
-        $this->style->width($size);
-        $this->style->height($size);
-        return $this;
-    }
-
-    public function scale(SmgScale $scale): self
-    {
-        $this->style->scale($scale);
-        return $this;
-    }
-
-    public function center(): self
-    {
-        return $this->align(SmgJustify::CENTER);
-    }
-
-    public function left(): self
-    {
-        return $this->align(SmgJustify::LEFT);
-    }
-
-    public function right(): self
-    {
-        return $this->align(SmgJustify::RIGHT);
-    }
-
-    public function align(SmgJustify $justify): self
-    {
-        $this->style->align($justify);
-        return $this;
-    }
-
-    public function style(SmgStyle $style): self
-    {
-        $this->style->merge($style);
-        return $this;
-    }
-
-    public function toJson(): ?string
-    {
-        $styles = new SmgMapStyles();
-        $styles->set('$img', $this->style);
-        if (!$styles->isEmpty()) {
-            $this->object["styles"] = json_decode($styles->toJson(), true);
+        if (count($this->imgObject) != 0) {
+            $this->object["img"] = $this->imgObject;
         }
-        if (count($this->object) == 0)
-            return null;
         return json_encode($this->object, JSON_UNESCAPED_UNICODE);
     }
 
