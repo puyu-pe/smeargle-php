@@ -76,54 +76,66 @@ class SmgStyle
         return json_encode($this->object, JSON_UNESCAPED_UNICODE);
     }
 
-    public function fontWidth(int $value): self
+    public function fontWidth(?int $value): self
     {
-        $this->object["fontWidth"] = min(max($value, 1), 7);
+        if ($value != null) {
+            $this->object["fontWidth"] = min(max($value, 1), 7);
+        }
         return $this;
     }
 
-    public function fontHeight(int $value): self
+    public function fontHeight(?int $value): self
     {
-        $this->object["fontHeight"] = min(max($value, 1), 7);
+        if ($value != null) {
+            $this->object["fontHeight"] = min(max($value, 1), 7);
+        }
         return $this;
     }
 
-    public function fontSize(int $value): self
+    public function fontSize(?int $value): self
     {
         $this->fontWidth($value);
         $this->fontHeight($value);
         return $this;
     }
 
-    public function bold(bool $value = true): self
+    public function bold(?bool $value = true): self
     {
-        $this->object["bold"] = $value;
+        if ($value != null) {
+            $this->object["bold"] = $value;
+        }
         return $this;
     }
 
-    public function normalize(bool $value = true): self
+    public function normalize(?bool $value = true): self
     {
-        $this->object["normalize"] = $value;
+        if ($value != null) {
+            $this->object["normalize"] = $value;
+        }
         return $this;
     }
 
-    public function bgInverted(bool $value = true): self
+    public function bgInverted(?bool $value = true): self
     {
-        $this->object["bgInverted"] = $value;
+        if ($value != null) {
+            $this->object["bgInverted"] = $value;
+        }
         return $this;
     }
 
-    public function pad(string $char): self
+    public function pad(?string $char): self
     {
-        if (isset($char[0])) {
+        if ($char != null && isset($char[0])) {
             $this->object["pad"] = $char[0];
         }
         return $this;
     }
 
-    public function align(SmgJustify $justify): self
+    public function align(?SmgJustify $justify): self
     {
-        $this->object["align"] = $justify->getValue();
+        if ($justify != null) {
+            $this->object["align"] = $justify->getValue();
+        }
         return $this;
     }
 
@@ -142,40 +154,50 @@ class SmgStyle
         return $this->align(SmgJustify::RIGHT);
     }
 
-    public function charxels(int $value): self
+    public function charxels(?int $value): self
     {
-        $this->object["charxels"] = max($value, 0);
+        if ($value != null) {
+            $this->object["charxels"] = max($value, 0);
+        }
         return $this;
     }
 
-    public function scale(SmgScale $value): self
+    public function scale(?SmgScale $value): self
     {
-        $this->object["scale"] = $value->getValue();
+        if ($value != null) {
+            $this->object["scale"] = $value->getValue();
+        }
         return $this;
     }
 
-    public function width(int $value): self
+    public function width(?int $value): self
     {
-        $this->object["width"] = max($value, 0);
+        if ($value != null) {
+            $this->object["width"] = max($value, 0);
+        }
         return $this;
     }
 
-    public function height(int $value): self
+    public function height(?int $value): self
     {
-        $this->object["height"] = max($value, 0);
+        if ($value != null) {
+            $this->object["height"] = max($value, 0);
+        }
         return $this;
     }
 
-    public function size(int $value): self
+    public function size(?int $value): self
     {
         $this->width($value);
         $this->height($value);
         return $this;
     }
 
-    public function charCode(string $value): self
+    public function charCode(?string $value): self
     {
-        $this->object["charCode"] = $value;
+        if($value != null){
+            $this->object["charCode"] = $value;
+        }
         return $this;
     }
 }

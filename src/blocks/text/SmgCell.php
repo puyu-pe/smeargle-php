@@ -10,12 +10,12 @@ class SmgCell
     {
         $this->object = [];
         $this->object["text"] = $text;
-        if (trim($class) !== "") {
-            $this->object["class"] = $text;
+        if ($class != null && trim($class) !== "") {
+            $this->object["class"] = $class;
         }
     }
 
-    public static function new(string $text, ?string $class = null): SmgCell
+    public static function build(string $text, ?string $class = null): SmgCell
     {
         return new SmgCell($text, $class);
     }

@@ -11,14 +11,12 @@ class SmgPrintObject
 {
     private array $object;
     private array $data;
-    private SmgMapStyles $styles;
     private array $metadata;
 
     private function __construct()
     {
         $this->object = [];
         $this->data = [];
-        $this->styles = new SmgMapStyles();
         $this->metadata = [];
     }
 
@@ -68,24 +66,18 @@ class SmgPrintObject
         return $this;
     }
 
-    public function addStyles(SmgMapStyles $styles): self
+    public function setStyles(SmgMapStyles $styles): self
     {
-        $this->styles->merge($styles);
+        if (!$styles->isEmpty()) {
+            $this->object["styles"] = json_decode($styles->toJson(), true);
+        }
         return $this;
-    }
-
-    public function getStyles(): SmgMapStyles
-    {
-        return $this->styles;
     }
 
     public function toJson(): string
     {
         if (count($this->data) > 0) {
             $this->object["data"] = $this->data;
-        }
-        if (!$this->styles->isEmpty()) {
-            $this->object["styles"] = json_decode($this->styles->toJson(), true);
         }
         $this->object = array_merge($this->metadata, $this->object);
         return json_encode($this->object, JSON_UNESCAPED_UNICODE);

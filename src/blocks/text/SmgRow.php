@@ -4,31 +4,32 @@ namespace PuyuPe\Smeargle\blocks\text;
 
 class SmgRow
 {
-    private array $array;
+    private array $row;
 
-    /**
-     * @param string[] $row
-     */
-    public function __construct(string $class, array $row = [])
+    public function __construct()
     {
-        $this->array = [];
-        for ($i = 0; $i < count($row); ++$i) {
-            $this->add($row[$i], $class);
-        }
+        $this->row = [];
     }
 
     public function add(string $text, ?string $class = null): self
     {
-        $cell = new SmgCell($text, $class);
-        $this->array[] = json_decode($cell->toJson(), true);
+        $cell = SmgCell::build($text, $class);
+        $this->row[] = json_decode($cell->toJson(), true);
         return $this;
     }
 
-    public function toJson(): ?string
+    public function isEmpty(): bool
     {
-        if (count($this->array) == 0) {
-            return null;
-        }
-        return json_encode($this->array, JSON_UNESCAPED_UNICODE);
+        return $this->size() == 0;
+    }
+
+    public function size(): int
+    {
+        return count($this->row);
+    }
+
+    public function toJson(): string
+    {
+        return json_encode($this->row);
     }
 }

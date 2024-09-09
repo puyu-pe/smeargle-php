@@ -73,7 +73,7 @@ class SmgMapStyles
 
     public function isEmpty(): bool
     {
-        return count($this->object) == 0;
+        return count($this->object) == 0 && $this->globalStyle->isEmpty();
     }
 
     public function toJson(): ?string

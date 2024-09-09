@@ -24,17 +24,9 @@ class SmgTextBlock implements SmgBlock
         return $this;
     }
 
-    /**
-     * @param SmgCell[] $cells
-     * @return $this
-     */
-    public function addRow(array $cells): self
+    public function addRow(SmgRow $row): self
     {
-        $row = [];
-        foreach ($cells as $cell) {
-            $row[] = json_decode($cell->toJson(), true);
-        }
-        $this->rows[] = $row;
+        $this->rows[] = json_decode($row->toJson(), true);
         return $this;
     }
 
