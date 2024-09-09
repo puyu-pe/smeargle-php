@@ -44,7 +44,7 @@ class SmgTextBlock implements SmgBlock
         return $this;
     }
 
-    public static function build(?string $separator = null): SmgTextBlock
+    public static function builder(?string $separator = null): SmgTextBlock
     {
         return new SmgTextBlock($separator);
     }

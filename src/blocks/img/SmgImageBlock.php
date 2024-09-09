@@ -15,7 +15,7 @@ class SmgImageBlock implements SmgBlock
         $this->imgObject = [];
     }
 
-    public static function build(): SmgImageBlock
+    public static function builder(): SmgImageBlock
     {
         return new SmgImageBlock();
     }
