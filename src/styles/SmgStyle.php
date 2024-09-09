@@ -1,6 +1,6 @@
 <?php
 
-namespace PuyuPe\Smeargle\blocks\style;
+namespace PuyuPe\Smeargle\styles;
 
 class SmgStyle
 {

@@ -3,10 +3,10 @@
 namespace PuyuPe\Smeargle\blocks\img;
 
 use PuyuPe\Smeargle\blocks\SmgBlock;
-use PuyuPe\Smeargle\blocks\style\SmgJustify;
-use PuyuPe\Smeargle\blocks\style\SmgMapStyles;
-use PuyuPe\Smeargle\blocks\style\SmgScale;
-use PuyuPe\Smeargle\blocks\style\SmgStyle;
+use PuyuPe\Smeargle\styles\SmgJustify;
+use PuyuPe\Smeargle\styles\SmgMapStyles;
+use PuyuPe\Smeargle\styles\SmgScale;
+use PuyuPe\Smeargle\styles\SmgStyle;
 
 class SmgImageBlock implements SmgBlock
 {
