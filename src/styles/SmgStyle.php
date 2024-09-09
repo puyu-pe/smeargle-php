@@ -13,16 +13,16 @@ class SmgStyle
 
     public function reset(array $object = []): self
     {
-        $this->object = [];
+        $this->object = $object;
         return $this;
     }
 
     public function uniqueClassName(): string
     {
         ksort($this->object);
-        $className = "style";
+        $className = "_";
         foreach ($this->object as $key => $value) {
-            $className = $className . "_" . $key . "=" . $value;
+            $className .= $key . "=" . $value . "_";
         }
         return $className;
     }

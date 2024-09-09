@@ -5,17 +5,25 @@ namespace PuyuPe\Smeargle\styles;
 class SmgMapStyles
 {
     private array $object;
+    private SmgStyle $globalStyle;
 
     public function __construct()
     {
         $this->object = [];
+        $this->globalStyle = SmgStyle::builder();
     }
 
-    public function set(string|int $classOrIndex, SmgStyle $style): self
+    public function addGlobalStyle(SmgStyle $style): self
+    {
+        $this->globalStyle->merge($style);
+        return $this;
+    }
+
+    public function set(string $class, SmgStyle $style): self
     {
         $jsonStyle = $style->toJson();
         if ($jsonStyle != null) {
-            $this->object[$classOrIndex] = json_decode($jsonStyle, true);
+            $this->object[$class] = json_decode($jsonStyle, true);
         }
         return $this;
     }
@@ -23,19 +31,9 @@ class SmgMapStyles
     public function get(string $class): ?SmgStyle
     {
         if ($this->has($class)) {
-            return SmgStyle::builder()->reset(json_decode($this->object[$class], true));
+            return SmgStyle::builder()->reset($this->object[$class]);
         }
         return null;
-    }
-
-    public function getOrCreate(string $class, SmgStyle $default): SmgStyle
-    {
-        if (!$this->has($class)) {
-            $this->set($class, $default);
-            return $default;
-        } else {
-            return $this->get($class) ?? $default;
-        }
     }
 
     public function remove(string|int $class): self
@@ -80,6 +78,9 @@ class SmgMapStyles
 
     public function toJson(): ?string
     {
+        if (!$this->globalStyle->isEmpty()) {
+            $this->set("*", $this->globalStyle);
+        }
         if ($this->isEmpty()) {
             return null;
         }
