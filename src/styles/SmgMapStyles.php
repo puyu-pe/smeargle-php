@@ -21,9 +21,8 @@ class SmgMapStyles
 
     public function set(string $class, SmgStyle $style): self
     {
-        $jsonStyle = $style->toJson();
-        if ($jsonStyle != null) {
-            $this->object[$class] = json_decode($jsonStyle, true);
+        if (!$style->isEmpty()) {
+            $this->object[$class] = json_decode($style->toJson(), true);
         }
         return $this;
     }

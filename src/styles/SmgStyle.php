@@ -39,7 +39,7 @@ class SmgStyle
         return $newStyle;
     }
 
-    public function if(bool $condition, SmgStyle $style): self
+    public function ifThen(bool $condition, SmgStyle $style): self
     {
         if ($condition) {
             $this->merge($style);
@@ -68,11 +68,8 @@ class SmgStyle
         return count($this->object) == 0;
     }
 
-    public function toJson(): ?string
+    public function toJson(): string
     {
-        if (count($this->object) == 0) {
-            return null;
-        }
         return json_encode($this->object, JSON_UNESCAPED_UNICODE);
     }
 
