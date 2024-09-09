@@ -29,39 +29,39 @@ class Smg
         return SmgStyle::builder()->right()->ifThen($charxels !== null, Smg::charxels($charxels));
     }
 
-    public static function bold(?bool $value = true, ?int $charxels = null): SmgStyle
+    public static function bold(?bool $value = true): SmgStyle
     {
-        return SmgStyle::builder()->bold($value)->ifThen($charxels !== null, Smg::charxels($charxels));
+        return SmgStyle::builder()->bold($value);
     }
 
-    public static function normalize(?bool $value = false, ?int $charxels = null): SmgStyle
+    public static function normalize(?bool $value = false): SmgStyle
     {
-        return SmgStyle::builder()->normalize($value)->ifThen($charxels !== null, Smg::charxels($charxels));
+        return SmgStyle::builder()->normalize($value);
     }
 
-    public static function fontWidth(?int $value, ?int $charxels = null): SmgStyle
+    public static function fontWidth(?int $value): SmgStyle
     {
-        return SmgStyle::builder()->fontWidth($value)->ifThen($charxels !== null, Smg::charxels($charxels));
+        return SmgStyle::builder()->fontWidth($value);
     }
 
-    public static function fontHeight(?int $value, ?int $charxels = null): SmgStyle
+    public static function fontHeight(?int $value): SmgStyle
     {
-        return SmgStyle::builder()->fontHeight($value)->ifThen($charxels !== null, Smg::charxels($charxels));
+        return SmgStyle::builder()->fontHeight($value);
     }
 
-    public static function fontSize(?int $value, ?int $charxels = null): SmgStyle
+    public static function fontSize(?int $value): SmgStyle
     {
-        return SmgStyle::builder()->fontSize($value)->ifThen($charxels !== null, Smg::charxels($charxels));
+        return SmgStyle::builder()->fontSize($value);
     }
 
-    public static function bgInverted(?bool $value = true, ?int $charxels = null): SmgStyle
+    public static function bgInverted(?bool $value = true): SmgStyle
     {
-        return SmgStyle::builder()->bgInverted($value)->ifThen($charxels !== null, Smg::charxels($charxels));
+        return SmgStyle::builder()->bgInverted($value);
     }
 
-    public static function pad(?string $char, ?int $charxels = null): SmgStyle
+    public static function pad(?string $char): SmgStyle
     {
-        return SmgStyle::builder()->pad($char)->ifThen($charxels !== null, Smg::charxels($charxels));
+        return SmgStyle::builder()->pad($char);
     }
 
     public static function charxels(?int $value): SmgStyle
@@ -89,9 +89,9 @@ class Smg
         return SmgStyle::builder()->scale($value);
     }
 
-    public static function charCode(?string $value, ?int $charxels = null): SmgStyle
+    public static function charCode(?string $value): SmgStyle
     {
-        return SmgStyle::builder()->charCode($value)->ifThen($charxels !== null, Smg::charxels($charxels));
+        return SmgStyle::builder()->charCode($value);
     }
 
     public static function leftBold(?int $charxels = null): SmgStyle

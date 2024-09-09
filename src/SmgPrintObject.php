@@ -83,6 +83,3 @@ class SmgPrintObject
         return json_encode($this->object, JSON_UNESCAPED_UNICODE);
     }
 }
-
-
-
