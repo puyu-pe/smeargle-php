@@ -1,9 +1,19 @@
 <?php
 
-namespace PuyuPe\Smeargle\styles;
+namespace PuyuPe\Smeargle;
+
+use PuyuPe\Smeargle\properties\SmgProperties;
+use PuyuPe\Smeargle\styles\SmgScale;
+use PuyuPe\Smeargle\styles\SmgStyle;
 
 class Smg
 {
+
+    public static function blockWidth(int $charxels): SmgProperties
+    {
+        return SmgProperties::builder()->setBlockWidth($charxels);
+    }
+
     public static function center(?int $charxels = null): SmgStyle
     {
         return SmgStyle::builder()->center()->if($charxels !== null, Smg::charxels($charxels));

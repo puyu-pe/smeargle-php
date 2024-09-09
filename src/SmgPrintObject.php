@@ -4,6 +4,7 @@ namespace PuyuPe\Smeargle;
 
 use PuyuPe\Smeargle\blocks\SmgBlock;
 use PuyuPe\Smeargle\opendrawer\SmgDrawer;
+use PuyuPe\Smeargle\properties\SmgProperties;
 use PuyuPe\Smeargle\styles\SmgMapStyles;
 
 class SmgPrintObject
@@ -19,6 +20,15 @@ class SmgPrintObject
         $this->data = [];
         $this->styles = new SmgMapStyles();
         $this->metadata = [];
+    }
+
+    public function setProperties(SmgProperties $properties): self
+    {
+        $jsonProperties = $properties->toJson();
+        if ($jsonProperties != null) {
+            $this->object["properties"] = json_decode($jsonProperties, true);
+        }
+        return $this;
     }
 
     public function addInfo(string $key, $value): self
