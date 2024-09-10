@@ -1,6 +1,6 @@
 <?php
 
-namespace PuyuPe\Smeargle;
+namespace PuyuPe\Smeargle\util;
 
 use PuyuPe\Smeargle\properties\SmgProperties;
 use PuyuPe\Smeargle\styles\SmgScale;

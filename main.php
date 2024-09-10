@@ -1,13 +1,12 @@
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 
-use PuyuPe\Smeargle\SmgPrintObject;
-use PuyuPe\Smeargle\Smg;
-use PuyuPe\Smeargle\blocks\text\SmgTextBlock;
-use PuyuPe\Smeargle\styles\SmgMapStyles;
-use PuyuPe\Smeargle\blocks\text\SmgCell;
 use PuyuPe\Smeargle\blocks\img\SmgImageBlock;
-use PuyuPe\Smeargle\blocks\qr\SmgQrBlock;
+use PuyuPe\Smeargle\blocks\text\SmgCell;
+use PuyuPe\Smeargle\blocks\text\SmgTextBlock;
+use PuyuPe\Smeargle\SmgPrintObject;
+use PuyuPe\Smeargle\styles\SmgMapStyles;
+use PuyuPe\Smeargle\util\Smg;
 
 $styles = new SmgMapStyles();
 $styles->addGlobalStyle(Smg::normalize(true));
@@ -19,7 +18,7 @@ $text = SmgTextBlock::builder()
 
 $img = SmgImageBlock::builder()->setClass('$img')->setPath("/Images/logo.png");
 
-$printObject = SmgPrintObject::build()
+$printObject = SmgPrintObject::builder()
     ->setStyles($styles)
     ->setProperties(Smg::blockWidth(48))
     ->addBlock($img)

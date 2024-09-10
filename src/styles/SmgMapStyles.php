@@ -41,6 +41,12 @@ class SmgMapStyles
         return $this;
     }
 
+    public function merge(SmgMapStyles $otherStyles): self
+    {
+        $this->object = array_merge($this->object, $otherStyles->object);
+        return $this;
+    }
+
     public function has(string $class): bool
     {
         return array_key_exists($class, $this->object);
