@@ -4,5 +4,5 @@ namespace PuyuPe\Smeargle\blocks;
 
 interface SmgBlock
 {
-    public function toJson(): ?string;
+    public function toJson(): string;
 }
