@@ -12,6 +12,10 @@
                           ▀                             
 ```
 
+![Packagist License](https://img.shields.io/packagist/l/puyu-pe/smeargle-php)
+![Packagist Version](https://img.shields.io/packagist/v/puyu-pe/smeargle-php)
+![Packagist Stars](https://img.shields.io/packagist/stars/puyu-pe/smeargle-php)
+
 [Smeargle](https://www.youtube.com/watch?v=Y9DENCQMSgQ) es un conjunto de utilidades y clases escrita en php según las especificaciones en formato
 json de [SweetTicketDesign](https://github.com/puyu-pe/SweetTicketDesign/tree/develop)
 para el diseño de tickets que seran emitidas a ticketeras termicas
@@ -34,6 +38,8 @@ Agregar la libreria mediante composer.
 ```shell
 composer require puyu-pe/smeargle-php
 ```
+![Packagist Downloads](https://img.shields.io/packagist/dt/puyu-pe/smeargle-php)
+![GitHub Release Date](https://img.shields.io/github/release-date/puyu-pe/smeargle-php)
 
 ## Funcionamiento :bookmark_tabs:
 
