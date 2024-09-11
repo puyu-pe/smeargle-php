@@ -20,9 +20,9 @@ class SmgStyle
     public function uniqueClassName(): string
     {
         ksort($this->object);
-        $className = "_";
+        $className = "";
         foreach ($this->object as $key => $value) {
-            $className .= $key . "=" . $value . "_";
+            $className .= $key . "=" . $value . "|";
         }
         return $className;
     }

@@ -35,7 +35,7 @@ class SmgPrintObject
         return $this;
     }
 
-    public static function build(): SmgPrintObject
+    public static function builder(): SmgPrintObject
     {
         return new SmgPrintObject();
     }
