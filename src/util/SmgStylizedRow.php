@@ -22,11 +22,15 @@ class SmgStylizedRow
         return new SmgStylizedRow();
     }
 
-    public function add(string $text, SmgStyle $style): self
+    public function add(string $text, ?SmgStyle $style = null): self
     {
-        $class = $style->uniqueClassName();
-        $this->row->add($text, $class);
-        $this->styles->setIfNotExists($class, $style);
+        if ($style != null) {
+            $class = $style->uniqueClassName();
+            $this->row->add($text, $class);
+            $this->styles->setIfNotExists($class, $style);
+        } else {
+            $this->row->add($text);
+        }
         return $this;
     }
 

@@ -24,12 +24,10 @@ con la ayuda de [PukaHTTP](https://github.com/puyu-pe/puka-http).
 ## Indice :card_index_dividers:
 
 1. [¿Cómo funciona?](#funcionamiento-bookmark_tabs)
-2. [Bloques de diseño](#bloques-de-diseño-art)
-3. [Bloques de texto](#texto-con-smgverticallayout)
-4. [Estilos de texto](#estilos-con-smgstyle)
-5. [Ejemplos de bloques de texto](#mas-ejemplos)
-6. [Diseño de imágenes](#imágenes)
-7. [Agregar código QR](#código-qr)
+2. [Utilidades](#utilidades-toolbox)
+3. [Bloques de texto](#textos-y-tablas-con-estilos)
+4. [Imágenes](#imágenes)
+5. [Código QR](#código-qr)
 
 ## Comenzando :rocket:
 
@@ -38,6 +36,7 @@ Agregar la libreria mediante composer.
 ```shell
 composer require puyu-pe/smeargle-php
 ```
+
 ![Packagist Downloads](https://img.shields.io/packagist/dt/puyu-pe/smeargle-php)
 ![GitHub Release Date](https://img.shields.io/github/release-date/puyu-pe/smeargle-php)
 
@@ -47,328 +46,233 @@ Smeargle es un conjunto de clases y utilidades para la generación de un objecto
 que representa un documento de impresión para [PukaHTTP](https://github.com/puyu-pe/puka-http).
 El objecto json esta construido segun la api de [SweetTicketDesign](https://github.com/puyu-pe/SweetTicketDesign/tree/develop).
 
-### La clase SmgPrintObject
+### Core de la libreria
 
-SmgPrintObject representa un objeto de impresión que puede ser enviado a PukaHTTP.
-Para crear una instancia de esta clase se debe llamar a su método estatico build.
+Los componentes principales de la libreria son 4, según las especificaciones de
+SweetTicketDesign.
 
-```injectablephp
-$printObject = SmgPrintObject::build();
+```json
+{
+    "properties": {
+    },
+    "data": {
+    },
+    "openDrawer": {
+    },
+    "styles": {
+    }
+}
 ```
 
-Con una instancia de SmgPrintObject podemos agregar texto basico sin estilos o bloques de diseño.
+Para cada uno de los componentes principales existen sus respectivas clases
+SmgProperties (properties), SmgTextBlock - SmgImageBlock - SmgQrBlock (data),
+SmgDrawer (opendrawer) y SmgMapStyles (styles).
 
-```injectablephp
-$printObject = SmgPrintObject::build();
-$printObject->text("hello word")
-$printObject->text("otro texto en la siguiente linea")
-$printObject->block($textBlock)
-$printObject->block($imageBlock)
-$printObject->block($qrBlock)
+```php
+$styles = SmgMapStyles::builder()
+    ->addGlobalStyle(Smg::normalize())
+    ->set("centerBoldStyleClass", Smg::centerBold());
+
+$properties = SmgProperties::builder()
+    ->setBlockWidth(48);
+
+$text = SmgTextBlock::builder()
+    ->addText("hello world. áéíóú")
+    ->addCell(SmgCell::build("title", "centerBoldStyleClass"));
+$image = SmgImageBlock::builder()->setPath("/home/images/logo.png");
+$qr = SmgQrBlock::builder()->setData("dfadsf|sadfsadf|dsfasdf|dafsa|fadsfsa");
 ```
 
-Se puede pasar una instancia de SmgPrintObjectConfig al metodo estatico build, para definir
-algunos metadatos o configuraciones opcionales adicionales.
+El objeto json que representa a todos los componentes se le denomina
+SmgPrintObject, una instancia de esta clase ayuda a registrar cada componente
+en el objeto de impresión.
 
-```injectablephp
-$config = SmgPrintObjectConfig::instance()
-    ->blockWidth(48) // Configura el numero de caracteres por linea del papel termico
-    ->normalize() // indica si se debe normalizar todo el contenido de impresión
-    ->info("key", "value") // agrega metadatos en formato clave valor
-    ->info("printer", $printer) 
-    ->info("time", 2) 
-    
-$printObject = SmgPrintObject::build($config);
+```php
+$printObject = SmgPrintObject::builder()
+    ->setStyles($styles)
+    ->setProperties($properties)
+    ->openDrawer()
+    ->addBlock($text)
+    ->addBlock($qr)
+    ->addBlock($image);
 ```
 
-> Nota: la propiedad blockWidth es importante por que representa el número de caracteres
-> máximo que puede entrar en una linea de un papel termico, el valor de esta propiedad se usa
-> para alinear correctamente los textos, imágenes o qr. Por defecto su valor es de 42, debido a que es
-> el mas común, pero para ticketeras de 72 mm se tiene que configurar 48, importante ir probando cual seria
-> el valor mas acertado.
+El metodo toJson() del objeto SmgPrintObject genera el json string que es
+lo que finalmente se enviará a PukaHTTP
 
-Opcionalmente se puede configurar algunos parametros para abrir la gaveta de dinero
-, por lo general esto no es necesario, ya que con sus valores por defecto es suficiente
-en la gran mayoria de casos.
-
-```injectablephp
-$customOpenDrawer SmgDrawer::builder()
-    ->pin(SmgDrawerPin::_2)
-    ->t2(120)
-    ->t2(240);
-$printObject = SmgPrintObject::build($config)->openDrawer();
+```
+echo json_encode(json_decode($printObject->toJson(), true), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 ```
 
-Siempre, al finalizar el trabajo de impresión se realiza un corte automático con
-feed 4 y de forma parcial. Sin embargo también se puede personalizar esto según las necesidades
-, pero con los valores por defecto se cubre una gran mayoria de casos de uso.
+Diseñar con smeargle puro implica crear primeramente los estilos asociados
+a clases para luego diseñar la disposición de los textos, images y qr en base a estas clases.
+El objeto SmgPrintObject es el que finalmmente ayuda a integrar cada uno de los 4 componentes
+representando de esta manera un objeto de impresión.
 
-```injectablephp
-...
-$config = SmgPrintObjectConfig::instance()
-    ->cut(SmgCutProperty::builder()->mode(SmgCutMode::FULL)->feed(2))
-...
-$printObject = SmgPrintObject::build($config);
+```php
+$printObject = SmgPrintObject::builder()
+    ->setStyles($styles)         // styles
+    ->setProperties($properties) // properties
+    ->openDrawer()               // openDrawer
+    ->addText("hello world")     // data
+    ->addBlock($text)            // data
+    ->addBlock($qr)              // data
+    ->addBlock($image);          // data
+    ->toJson();                  // json string to send PukaHTTP
 ```
 
-## Bloques de diseño :art:
+Jugar con los 4 componentes permite crear varios diseños de impresión,
+sin embargo sigue siendo algo complejo de administrar. Es por ello
+que smeargle-php trae incluido una serie de utilidades para diseñar
+de forma mas descriptiva y sencilla los documentos de impresión.
 
-Los bloques de diseño representan componentes complejos en un documento de impresión,
-con componentes de texto se puede representar diferentes tipos de disposición de texto
-en un documento de impresión, con componentes de imágenes se puede personalizar la ubicación y la forma
-en la que se debe mostrar la imagen en el documento de impresión. Lo mismo con componentes QR para personalizar
-su tamaño o nivel de error.
+## Utilidades :toolbox:
 
-### Texto con SmgVerticalLayout
+Jugar con los 4 componentes permite crear varios diseños de impresión,
+sin embargo sigue siendo algo complejo de administrar. Es por ello
+que smeargle-php trae incluido una serie de utilidades para diseñar
+de forma mas descriptiva y sencilla los documentos de impresión.
 
-SmgVerticalLayout es un envoltorio para la clase SmgTextBlock que agrega utilidades
-para un diseño de texto mas flexible en disposición vertical. SmgTextBlock es una clase con metodos mas complejos
-y con casos de uso mas genericos, por lo que su uso no se documentara en esta sección.
+* **Smg**, shortcuts para styles y properties
+* **SmgStylizedRow**, representa una fila de impresión con estilos y generación de clases automáticas.
+* **SmgTextLayout**, mejora el modo de diseño de bloques de texto y tambien aprovecha la generación de clases automáticas
+* **SmgTicket**, incluye una serie de metodos para mejorar el mecanismo de diseño de los documentos de impresión.
 
-Por ejemplo para representar un texto que se debe imprimir al centro de la hoja;
+### La clase SmgTicket
 
-```injectablephp
-$layout = SmgVerticalLayout()->build()
-    ->toCenter("texto al centro");
+SmgTicket pretende ser una plantilla generica para el diseño de tickets
+Se puede crear una instancia de la clase SmgTicket con su método estatico builder().
+
+```php
+$ticket = SmgTicket::builder()
 ```
 
-Despues de definir un bloque de díseño, se debe adjuntar al objeto de impresión usando el método
-block() de alguna instancia de SmgPrintObject, de lo contrario no se tomara en cuenta a la hora
-de enviar los el objeto de impresión a PukaHTTP.
+Opcionalmente se puede pasar un objeto properties y un conjunto de estilos.
 
-Por ejemplo, para considera el anterior bloque SmgVerticalLayout ($layout) en el objeto de impresión:
-
-```injectablephp
-$layout = SmgVerticalLayout()->build()
-    ->toCenter("texto al centro");
-...
-
-$printObject = SmgPrintObject::build()->block($layout);
+```php
+$properties = SmgProperties::builder()->setBlockWidth(48);
+$styles = new SmgMapStyles();
+$styles->addGlobalStyle(Smg::normalize(true));
+$ticket1 = SmgTicket::builder($properties, $styles)
+$ticket2 = SmgTicket::builder($properties);
+$ticket3 = SmgTicket::builder(null, $styles);
 ```
 
-### Estilos con SmgStyle
+Con una instancia de SmgProperties se configura el blockWidth que es una representación
+abstracta del número de caracteres máximo con tamaño de fuente pequeña,
+que puede contener una linea en el papel termico. Es importante establecer
+este valor, de acuerdo al ancho del papel termico, por lo general sus valores suelen
+ser 42 y 48 para la mayoria de papeles termicos.
 
-SmgStyle es un objeto de estilo que representa un conjunto de propiedades de diseño
-de un texto, imagen o qr. Para crear un
-objeto de estilo se tiene que invocar al método builder() de la clase SmgStyle y
-configurar las propiedades necesarias a partir de ahi.
+Opcionalmente también se pude personalizar el método de corte que se realiza
+siempre al finalizar el trabajo de impresión.
 
-```injectablephp
-$boldStyle = SmgStyle()->builder()->bold();
-$boldCenterStyle = SmgStyle()->builder()->bold()->center();
-$boldCenterStyleMaxSpan = SmgStyle()->builder()->bold()->center()->maxSpan();
-$otherStyle = SmgStyle()->builder()->bgInverted()->pad("*"); 
-...
+```php
+$properties = SmgProperties::builder()
+    ->setCut(SmgCutProperty::builder()
+        ->feed(2)
+        ->mode(SmgCutMode::FULL))
+    ->setBlockWidth(48);
 ```
 
-Alternativamente, la clase Smg trae varios metodos compuestos que facilitan la creación de estilos
+También se puede configurar estilos globales validos en todo el objeto de impresión,
+esto puede ser util si en caso sea necesario normalizar todo el documento de impresión
+o aplicar algun estilo global por defecto.
 
-```injectablephp
-$style = Smg::centerBoldMaxSpan()->pad("*");
-$title = Smg::title(); // igual a SmgStyle::builder()->center()->bold()->fontSize(2)->maxSpan()
-$subtitle = Smg::subtitle(); // igual a SmgStyle::builder()->left()->bold()->maxSpan()
+```php
+$styles = SmgMapStyles::builder()
+    ->addGlobalStyle(Smg::normalize(true))
+    ->addGlobalStyle(Smg::center());
 ```
 
-### SmgVerticalLayout con estilos
+### Textos y tablas con estilos.
 
-En la mayoria de métodos de SmgVerticalLayout se puede configurar un objeto de estilo
-por ejemplo si se quiere representar un texto que se debe imprimir al centro y en negrita
-usariamos:
+Utilizando una instancia de la clase SmgTicket podemos diseñar bloques de texto
+que ocupen todo una linea del documento de impresión o tambien se puede dividir la linea
+en columnas, para representar columnas se necesita una instancia de SmgStylizedRow.
 
-```injectablephp
-$layout = SmgVerticalLayout::build()
-    ->toCenter("al centro", Smg::bold());
-...
-```
-
-Otros métodos utiles que trae SmgVerticalLayout son:
-
-```injectablephp
-$layout = SmgVerticalLayout()->build()
-    ->toLeft("texto a la izquierda")
-    ->toLeft("izquierda con estilo", Smg::bgInverted())
-    ->toRight("texto a la derecha")
-    ->toRight("derecha con estilo", Smg::pad(*))
-    ->title("title");
-    ->title("title adicional", Smg::bgInverted()->pad(*));
-    ->custom("customizable", Smg::fontWidth(2)->right()->bold()->normalize()->span(2))
-    ->line("*")
-    ->subtitle("")
-    ->line("*", Smg::bold())
-    ->line()
-    ->row(new SmgRow(["colum1", "column2"]))
-    ->simpleRow(["colum1", "column2"])
-    ->simpleRow(["colum1", "column2"], Smg::bold())
-    ->rows(new SmgRow(["colum1", "column2"]), new SmgRow(["column1"]))
-...
-
-$printObject = SmgPrintObject::build()->block($layout);
-```
-
-### Mas ejemplos
-
-A continuación se muestra como se representaria diseños basicos como
-una prueba de impresión o una tabla de productos.
-
-#### Prueba de impresión
-
-```injectablephp
-$testPrintConfig = SmgTextBlockConfig::instance()
-    ->styleForColumn(0, Smg::span(2)) // style for column 1
-    ->styleForColumn(1, Smg::maxSpan()); // style for column 2
-
-$test = new SmgVerticalLayout($testPrintConfig);
-$test
-    ->title("Servicio de impresión PUKA - PUYU")
-    ->toCenter("Esta es una prueba de impresión")
-    ->line("*")
-    ->simpleRow(["name_system:", "192.168.18.39"])
-    ->simpleRow(["port:", "9100"])
-    ->simpleRow(["blockWidth:", "48"])
-    ->line()
-    ->toCenter("Gracias, que tenga  un buen dia.");
-
-$printObjectConfig = SmgPrintObjectConfig::instance()->blockWidth(48);
-$jsonString = SmgPrintObject::build($printObjectConfig)->block($test)->toJson();
-send_data($jsonString); // ejm. send data to local server PukaHTTP
-```
-
-#### Tabla de productos
-
-```injectablephp
-$header = new SmgRow(["header1", "header2", "header3"], Smg::bold());
-
-$body = array_map(function ($product) {
-    return new SmgRow([$product["name"], $product["units"], $product["price"]]);
-}, $products);
-
-$footer = new SmgRow();
-$footer->add("total:", Smg::bold()->right()->span(4));
-$footer->add("450.47");
-
-$tablePrintConfig = SmgTextBlockConfig::instance()
-    ->separator("|")
-    ->styleForColumn(0, Smg::left())
-    ->styleForColumn(1, Smg::center())
-    ->styleForColumn(2, Smg::right());
-
-$table = new SmgVerticalLayout($tablePrintConfig);
-$table
-    ->title("Tabla de ejemplo")
-    ->line("*")
-    ->row($header)
-    ->line()
-    ->rows($body)
-    ->line()
-    ->row($footer);
-
-$printObjectConfig = SmgPrintObjectConfig::instance()->blockWidth(48);
-$jsonString = SmgPrintObject::build($printObjectConfig)->block($table)->toJson();
-send_data($jsonString); // ejm. send data to local server PukaHTTP
+```php
+$ticket = SmgTicket::builder()
+    ->addText("title", Smg::title())
+    ->addRow(SmgStylizedRow::build()
+        ->add("column1", Smg::leftBold())
+        ->add("column2", Smg::centerBold()))
+    ->addLine('*')
+    ->addLine('-')
+    ->addLine();
 ```
 
 ### Imágenes
 
-Para representar una imágen creamos una instancia de la clase SmgImageBlock mediante su método build()
-y pasando como argumento obligatorio la ruta absoluta local a la imagen en la pc donde esta instalado PukaHTTP.
-Si la imágen no existe en esa ruta, entonces la impresión del bloque de imagen sera ignorada,
-esto con el objetivo de no afectar a los demás bloques de diseño.
+Para representar una imágen creamos una instancia de la clase SmgImageBlock mediante su método estatico builder(),
+utilizando esta instancia se puede configurar una ruta local a la imagen.
 
-```injectablephp
-$imageBlock = SmgImageBlock::build("/home/socamaru/Descargas/logos/gato.png");
-$printObject = SmgPrintObject::build()->block($imageBlock);
+```php
+$imageBlock = SmgImageBlock::builder()->setPath("/home/images/logo.png");
 ```
 
-Opcionalmente, se puede personalizar propiedades como el
-tipo de escalado de imagen , ancho , altura y alineación.
+Los estilos configurables para las imágenes, son width, height, scale, align
 
-```injectablephp
-$imageBlock = SmgImageBlock::build("/home/socamaru/Descargas/logos/gato.png")
-    ->width(240)
-    ->height(400)
-    ->size(290)
-    ->center()
-    ->aling(SmgJustify::CENTER)
-    ->left()
-    ->aling(SmgJustify::LEFT)
-    ->right()
-    ->aling(SmgJustify::RIGHT)
-    ->scale(SmgScale::SMOOTH);
-    
-$printObject = SmgPrintObject::build()->block($imageBlock);
+```php
+$imageBlock = SmgImageBlock::builder()->setPath("/home/images/logo.png");
+$ticket = SmgTicket::builder($properties, $styles)
+    ->addImage($img, Smg::width(290)->height(290)->scale(SmgScale::SMOOTH)->center())
 ```
 
-Importante mencionar que que si la imagen no esta correctamente alineado,
+Importante mencionar que que si la imagen no esta correctamente alineada,
 puede deberse a que el parametro blockWidth no tiene un valor acertado.
 El valor de blockWidth por defecto es de 42 caracteres por linea, para papeles termicos de 72 mm
-el tamaño deseado seria 48 esto se puede configurar en las propiedades de configuración del
-objeto de impresión.
-
-```injectablephp
-$imageBlock = SmgImageBlock::build("/home/socamaru/Descargas/logos/gato.png")->center();
-...
-$config = SmgPrintObjectConfig::instance()
-    ->blockWidth(48); // 48 para papeles termicos de 72 mm
-$printObject = SmgPrintObject::build($config) // !Importante pasar el objeto $config al metodo build del SmgPrintObject
-    ->block($imageBlock);
-```
+el tamaño deseado seria 48.
 
 ### Código Qr
 
-Para representar un código qr, se be instanciar un objeto SmgQrBlock mediante su método estatico build()
-y pasando como argumento obligatorio el stringQr (data).
+Para representar un código qr, se debe instanciar un objeto SmgQrBlock mediante 
+su método estatico builder() y se configurar el stringQr mediante el método setData().
 
-```injectablephp
-$qrBlock = SmgQrBlock::build("20450523381|01|F001|00000006|0|9.00|30/09/2019|6|sdfsdfsdf|");
-...
-$config = SmgPrintObjectConfig::instance()->blockWidth(48);
-$printObject = SmgPrintObject::build($config)->block($qrBlock);
+```php
+$qr = SmgQrBlock::builder()->setData("20450523381|01|F001|00000006|0|9.00|30/09/2019|6|sdfsdfsdf|");
 ```
 
-Igual que las imágenes, el qr tambien se puede personalizar la alineación, el tamaño y su escalado.
-Debido a que el código qr debe ser cuadrado, se implementa un método size() para configurar su ancho y altura
-con el mismo valor.
+Igual que las imágenes, tambien es posible configurar estilos
+para un objeto qr como width, height, scale y align.
 
-```injectablephp
-$qrBlock = SmgQrBlock::build("20450523381|01|F001|00000006|0|9.00|30/09/2019|6|sdfsdfsdf|")
-    ->center()
-    ->size(290)
-    ->scale(SmgScale::SMOOTH);
-...
-$config = SmgPrintObjectConfig::instance()->blockWidth(48);
-$printObject = SmgPrintObject::build($config)->block($qrBlock);
+```php
+$qr = SmgQrBlock::builder()->setData("20450523381|01|F001|00000006|0|9.00|30/09/2019|6|sdfsdfsdf|");
+$ticketJson = SmgTicket::builder()
+    ->addQrCode($qr, Smg::width(290)
+        ->height(290)
+        ->scale(SmgScale::SMOOTH)
+        ->center())
+    ->toJson();
 ```
 
 #### Configuración propiedades Qr
 
 Opcionalmente se puede configurar el nivel de corrección de error, y el tipo de QR.
 
-```injectablephp
-$qrConfig = SmgQrConfig::instance()->low()->native();
-$qrBlock = SmgQrBlock::build("20450523381|01|F001|00000006|0|9.00|30/09/2019|6|sdfsdfsdf|", $qrConfig)
-    ->center()
-    ->size(290)
-    ->scale(SmgScale::SMOOTH);
-$config = SmgPrintObjectConfig::instance()->blockWidth(48);
-$printObject = SmgPrintObject::build($config)->block($qrBlock);
+```php
+$qr = SmgQrBlock::builder()
+    ->setData("20450523381|01|F001|00000006|0|9.00|30/09/2019|6|sdfsdfsdf|")
+    ->setCorrectionLevel(SmgQrErrorLevel::H)
+    ->setQrType(SmgQrType::NATIVE);
 ```
 
 Los niveles de corrección de error permitidos son low, medium, high y quartile.
 Por defecto, si no se configura, es quartile.
 
-```injectablephp
-$qrConfig = SmgQrConfig::instance()
-    ->low()
-    ->medium()
-    ->high()
-    ->quartile();
+```php
+$qr = SmgQrBlock::builder()
+    ->setCorrectionLevel(SmgQrErrorLevel::L)
+    ->setCorrectionLevel(SmgQrErrorLevel::M)
+    ->setCorrectionLevel(SmgQrErrorLevel::H)
+    ->setCorrectionLevel(SmgQrErrorLevel::Q);
 ...
 ```
 
 ##### ¿Qr Type?
 
 El tipo de qr es una propiedad especial que indica como debe ser tratado el Qr,
-existen dos formas, "native" y "img", "native" significa que el qr sera tratado de forma nativa
+existen dos formas, "native" y "img". El modo "native" significa que el qr sera tratado de forma nativa
 por la impresora termica y "img" índica que el qr sera tratado previamente como imagen y luego
 imprimirse como imagen.
 
@@ -380,9 +284,8 @@ es por eso que SweetTicketDesign se encarga de tratar el qr como imagen para red
 en formato imagen a la impresora termica. Asegurando la correcta alineación del qr en cualquier ticketera (siempre y cuando
 la impresora termica soporte imágenes).
 
-```injectablephp
-$qrConfig = SmgQrConfig::instance()->likeImg() // valor por defecto
-...
+```php
+$qr = SmgQrBlock::builder()->setQrType(SmgQrType::IMG) // por defecto;
 ```
 
 Si se configura como "native", entonces sera la misma ticketera encargada de generar y alinear el qr.
@@ -390,9 +293,8 @@ esto no asegura la correcta impresión del código qr en algunas ticketeras, ya 
 qr de forma distinta. Esto quizas sea util si la impresora termica no soporta imágenes, pero puede que si soporte impresión de
 código qr de forma nativa.
 
-```injectablephp
-$qrConfig = SmgQrConfig::instance()->native()
-...
+```php
+$qr = SmgQrBlock::builder()->setQrType(SmgQrType::NATIVE);
 ```
 
 Otra diferencias son:

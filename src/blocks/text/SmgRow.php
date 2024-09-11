@@ -11,6 +11,10 @@ class SmgRow
         $this->row = [];
     }
 
+    public static function build(): SmgRow{
+        return new SmgRow();
+    }
+
     public function add(string $text, ?string $class = null): self
     {
         $cell = SmgCell::build($text, $class);
@@ -30,6 +34,6 @@ class SmgRow
 
     public function toJson(): string
     {
-        return json_encode($this->row);
+        return json_encode($this->row, JSON_UNESCAPED_UNICODE);
     }
 }

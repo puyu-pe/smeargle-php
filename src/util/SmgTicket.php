@@ -26,6 +26,17 @@ class SmgTicket
         $this->currentLayout = SmgTextLayout::build();
     }
 
+    public static function builder(?SmgProperties $properties = null, ?SmgMapStyles $styles = null): SmgTicket
+    {
+        return new SmgTicket($properties, $styles);
+    }
+
+    public function addInfo(string $key, $value): self
+    {
+        $this->printObject->addInfo($key, $value);
+        return $this;
+    }
+
     public function addText(string $text, ?SmgStyle $style = null): self
     {
         $this->currentLayout->addText($text, $style);
@@ -102,6 +113,7 @@ class SmgTicket
 
     public function toJson(): string
     {
+        $this->dumpLayout();
         $this->printObject->setStyles($this->styles);
         $this->printObject->setProperties($this->properties);
         return $this->printObject->toJson();

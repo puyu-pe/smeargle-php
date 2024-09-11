@@ -13,6 +13,11 @@ class SmgMapStyles
         $this->globalStyle = SmgStyle::builder();
     }
 
+    public static function builder(): SmgMapStyles
+    {
+        return new SmgMapStyles();
+    }
+
     public function addGlobalStyle(SmgStyle $style): self
     {
         $this->globalStyle->merge($style);

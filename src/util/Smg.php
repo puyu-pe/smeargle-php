@@ -24,7 +24,7 @@ class Smg
         return SmgStyle::builder()->left()->ifThen($charxels !== null, Smg::charxels($charxels));
     }
 
-    public static function right(?int $charxels = 0): SmgStyle
+    public static function right(?int $charxels = null): SmgStyle
     {
         return SmgStyle::builder()->right()->ifThen($charxels !== null, Smg::charxels($charxels));
     }
