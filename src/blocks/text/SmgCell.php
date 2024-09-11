@@ -17,7 +17,7 @@ class SmgCell
 
     public static function build(string $text, ?string $class = null): SmgCell
     {
-        return new SmgCell($text, $class);
+        return new SmgCell(trim($text), $class);
     }
 
     public function toJson(): string

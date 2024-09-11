@@ -20,7 +20,7 @@ class SmgTextBlock implements SmgBlock
 
     public function addText(string $text): self
     {
-        $this->rows[] = $text;
+        $this->rows[] = trim($text);
         return $this;
     }
 
@@ -39,6 +39,11 @@ class SmgTextBlock implements SmgBlock
     public static function builder(?string $separator = null): SmgTextBlock
     {
         return new SmgTextBlock($separator);
+    }
+
+    public function isEmpty(): bool
+    {
+        return count($this->rows) == 0;
     }
 
     public function toJson(): string
