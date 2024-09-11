@@ -100,7 +100,7 @@ $printObject = SmgPrintObject::builder()
 El metodo toJson() del objeto SmgPrintObject genera el json string que es
 lo que finalmente se enviará a PukaHTTP
 
-```
+```php
 echo json_encode(json_decode($printObject->toJson(), true), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 ```
 
