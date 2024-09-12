@@ -47,7 +47,7 @@ class SmgQrBlock implements SmgBlock
     public function toJson(): string
     {
         if (count($this->qrObject) != 0) {
-            $this->object[] = $this->qrObject;
+            $this->object["qr"] = $this->qrObject;
         }
         return json_encode($this->object, JSON_UNESCAPED_UNICODE);
     }
