@@ -33,6 +33,12 @@ class SmgDrawer
         return $this;
     }
 
+    public function reset(array $object = []): self
+    {
+        $this->object = $object;
+        return $this;
+    }
+
     public function toJson(): string
     {
         return json_encode($this->object, JSON_UNESCAPED_UNICODE);
