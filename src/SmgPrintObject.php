@@ -55,11 +55,7 @@ class SmgPrintObject
     public function openDrawer(SmgDrawer|bool $openDrawer = true): self
     {
         if (is_bool($openDrawer)) {
-            if ($openDrawer) {
-                $this->object["openDrawer"] = [];
-            } else {
-                unset($this->object["openDrawer"]);
-            }
+            $this->object["openDrawer"] = $openDrawer;
         } else {
             $this->object["openDrawer"] = json_decode($openDrawer->toJson(), true);
         }

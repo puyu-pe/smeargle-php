@@ -27,6 +27,7 @@ $ticketJson = SmgTicket::builder()
         ->height(290)
         ->scale(SmgScale::SMOOTH)
         ->center())
+    ->openDrawer()
     ->toJson();
 
-//echo json_encode(json_decode($ticket->toJson(), true), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+echo json_encode(json_decode($ticketJson, true), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
