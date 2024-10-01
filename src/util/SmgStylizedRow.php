@@ -24,7 +24,7 @@ class SmgStylizedRow
 
     public function add(string $text, ?SmgStyle $style = null): self
     {
-        if ($style != null) {
+        if ($style !== null) {
             $class = $style->uniqueClassName();
             $this->row->add($text, $class);
             $this->styles->setIfNotExists($class, $style);

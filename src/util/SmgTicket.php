@@ -69,7 +69,7 @@ class SmgTicket
     public function addImage(SmgImageBlock $img, ?SmgStyle $style = null): self
     {
         $this->dumpLayout();
-        if ($style != null) {
+        if ($style !== null) {
             $class = $style->uniqueClassName();
             $img->setClass($class);
             $this->styles->set($class, $style);
@@ -81,7 +81,7 @@ class SmgTicket
     public function addQrCode(SmgQrBlock $qr, ?SmgStyle $style = null): self
     {
         $this->dumpLayout();
-        if ($style != null) {
+        if ($style !== null) {
             $class = $style->uniqueClassName();
             $qr->setClass($class);
             $this->styles->set($class, $style);

@@ -75,7 +75,7 @@ class SmgStyle
 
     public function fontWidth(?int $value): self
     {
-        if ($value != null) {
+        if ($value !== null) {
             $this->object["fontWidth"] = min(max($value, 1), 7);
         }
         return $this;
@@ -83,7 +83,7 @@ class SmgStyle
 
     public function fontHeight(?int $value): self
     {
-        if ($value != null) {
+        if ($value !== null) {
             $this->object["fontHeight"] = min(max($value, 1), 7);
         }
         return $this;
@@ -98,7 +98,7 @@ class SmgStyle
 
     public function bold(?bool $value = true): self
     {
-        if ($value != null) {
+        if ($value !== null) {
             $this->object["bold"] = $value;
         }
         return $this;
@@ -106,7 +106,7 @@ class SmgStyle
 
     public function normalize(?bool $value = true): self
     {
-        if ($value != null) {
+        if ($value !== null) {
             $this->object["normalize"] = $value;
         }
         return $this;
@@ -114,7 +114,7 @@ class SmgStyle
 
     public function bgInverted(?bool $value = true): self
     {
-        if ($value != null) {
+        if ($value !== null) {
             $this->object["bgInverted"] = $value;
         }
         return $this;
@@ -122,7 +122,7 @@ class SmgStyle
 
     public function pad(?string $char): self
     {
-        if ($char != null && isset($char[0])) {
+        if ($char !== null && isset($char[0])) {
             $this->object["pad"] = $char[0];
         }
         return $this;
@@ -130,7 +130,7 @@ class SmgStyle
 
     public function align(?SmgJustify $justify): self
     {
-        if ($justify != null) {
+        if ($justify !== null) {
             $this->object["align"] = $justify->getValue();
         }
         return $this;
@@ -153,7 +153,7 @@ class SmgStyle
 
     public function charxels(?int $value): self
     {
-        if ($value != null) {
+        if ($value !== null) {
             $this->object["charxels"] = max($value, 0);
         }
         return $this;
@@ -161,7 +161,7 @@ class SmgStyle
 
     public function scale(?SmgScale $value): self
     {
-        if ($value != null) {
+        if ($value !== null) {
             $this->object["scale"] = $value->getValue();
         }
         return $this;
@@ -169,7 +169,7 @@ class SmgStyle
 
     public function width(?int $value): self
     {
-        if ($value != null) {
+        if ($value !== null) {
             $this->object["width"] = max($value, 0);
         }
         return $this;
@@ -177,7 +177,7 @@ class SmgStyle
 
     public function height(?int $value): self
     {
-        if ($value != null) {
+        if ($value !== null) {
             $this->object["height"] = max($value, 0);
         }
         return $this;
@@ -192,7 +192,7 @@ class SmgStyle
 
     public function charCode(?string $value): self
     {
-        if($value != null){
+        if($value !== null){
             $this->object["charCode"] = $value;
         }
         return $this;

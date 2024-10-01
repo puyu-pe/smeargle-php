@@ -13,7 +13,7 @@ class SmgTextBlock implements SmgBlock
     {
         $this->object = ["type" => "text"];
         $this->rows = [];
-        if ($separator != null && trim($separator) !== "") {
+        if ($separator !== null && trim($separator) !== "") {
             $this->object["separator"] = $separator;
         }
     }

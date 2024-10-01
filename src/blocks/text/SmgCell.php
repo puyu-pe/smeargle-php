@@ -10,7 +10,7 @@ class SmgCell
     {
         $this->object = [];
         $this->object["text"] = $text;
-        if ($class != null && trim($class) !== "") {
+        if ($class !== null && trim($class) !== "") {
             $this->object["class"] = $class;
         }
     }

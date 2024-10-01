@@ -23,7 +23,7 @@ class SmgPrintObject
     public function setProperties(SmgProperties $properties): self
     {
         $jsonProperties = $properties->toJson();
-        if ($jsonProperties != null) {
+        if ($jsonProperties !== null) {
             $this->object["properties"] = json_decode($jsonProperties, true);
         }
         return $this;

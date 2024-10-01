@@ -19,15 +19,11 @@ use PuyuPe\Smeargle\properties\SmgCutMode;
 use PuyuPe\Smeargle\styles\SmgScale;
 use PuyuPe\Smeargle\blocks\qr\SmgQrErrorLevel;
 use PuyuPe\Smeargle\blocks\qr\SmgQrType;
+use \PuyuPe\Smeargle\styles\SmgStyle;
 
 $qr = SmgQrBlock::builder()->setQrType(SmgQrType::NATIVE);
 
-$ticketJson = SmgTicket::builder()
-    ->addQrCode($qr, Smg::width(290)
-        ->height(290)
-        ->scale(SmgScale::SMOOTH)
-        ->center())
-    ->openDrawer()
-    ->toJson();
+$style = Smg::centerBold()->fontWidth(2);
+$styleJson = SmgStyle::copy($style)->bold(false)->fontSize(3)->toJson();
 
-echo json_encode(json_decode($ticketJson, true), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+echo json_encode(json_decode($styleJson, true), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);

@@ -25,7 +25,7 @@ class SmgProperties
     public function setCut(SmgCutProperty $cutProperty): self
     {
         $cut = $cutProperty->toJson();
-        if ($cut != null) {
+        if ($cut !== null) {
             $this->object["cut"] = json_decode($cutProperty->toJson(), true);
         }
         return $this;

@@ -26,7 +26,7 @@ class SmgTextLayout
 
     public function addText(string $text, ?SmgStyle $style = null): self
     {
-        if ($style != null) {
+        if ($style !== null) {
             $class = $style->uniqueClassName();
             $this->textBlock->addCell(SmgCell::build($text, $class));
             $this->styles->setIfNotExists($class, $style);
@@ -46,7 +46,7 @@ class SmgTextLayout
     public function addLine(string $char = " ", ?SmgStyle $customStyle = null): self
     {
         $lineStyle = Smg::pad($char);
-        if ($customStyle != null) {
+        if ($customStyle !== null) {
             $lineStyle = SmgStyle::copy($customStyle)->merge($lineStyle);
         }
         $class = $lineStyle->uniqueClassName();
