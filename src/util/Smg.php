@@ -34,7 +34,7 @@ class Smg
         return SmgStyle::builder()->bold($value);
     }
 
-    public static function normalize(?bool $value = false): SmgStyle
+    public static function normalize(?bool $value = true): SmgStyle
     {
         return SmgStyle::builder()->normalize($value);
     }
